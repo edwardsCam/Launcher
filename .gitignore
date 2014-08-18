@@ -19,3 +19,13 @@
 *.exe
 *.out
 *.app
+
+# VS
+*.suo
+*.sdf
+*.opensdf
+*.sln
+Debug/*
+
+# Git
+.gitignore
