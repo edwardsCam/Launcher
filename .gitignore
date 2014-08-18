@@ -24,6 +24,12 @@
 *.sdf
 *.opensdf
 *.sln
+Debug/*.log
+Debug/*.tlog
+Debug/*.lastbuildstate
+Debug/*.ilk
+Debug/*.idb
+Debug/*.pdb
 
 # Git
 .gitignore
