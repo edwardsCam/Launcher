@@ -17,6 +17,7 @@
 #define MAX_FRAMERATE 24
 #define WIDTH 800
 #define HEIGHT 600
+#define BG_COLOR 175,220,220
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -24,83 +25,83 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	window.create(sf::VideoMode(WIDTH, HEIGHT), "Planet Launcher");
 	window.setFramerateLimit(MAX_FRAMERATE);
 	window.setKeyRepeatEnabled(false);
+	window.clear(sf::Color(BG_COLOR));
 
 	Game theGame;
+	theGame.init();
 
 	//game loop
 	while (window.isOpen())
-	{	
-		sf::Event event;
-		while (window.pollEvent(event)) {
+	{
 
-			switch (event.type)
-			{
-			case (sf::Event::Closed):
+		while (theGame.current_level && theGame.current_level->active)
+		{
+			sf::Event event;
+			while (window.pollEvent(event)) {
+
+				switch (event.type)
 				{
-					//todo save state? or other things before closing
-					window.close();
-					break;
-				}
-
-			case (sf::Event::LostFocus):
-				{
-					//todo
-					theGame.pause();
-					break;
-				}
-
-			case (sf::Event::GainedFocus):
-				{
-					//todo
-					theGame.resume();
-					break;
-				}
-
-			case (sf::Event::Resized):
-				{
-					sf::Vector2u s(WIDTH, HEIGHT);
-					window.setSize(s);
-					break;
-				}
-
-			case (sf::Event::KeyPressed):
-				{
-					//todo
-					if (event.key.code == sf::Keyboard::Escape) {
-
+				case (sf::Event::Closed):
+					{
+						//todo save state? or other things before closing
+						window.close();
+						break;
 					}
-					else if (event.key.code == sf::Keyboard::Space) {
-						if (theGame.isPaused())
-							theGame.resume();
-						else
-							theGame.pause();
+
+				case (sf::Event::LostFocus):
+					{
+						//todo
+						theGame.pause();
+						break;
 					}
-					break;
-				}
 
-			case (sf::Event::MouseButtonPressed):
-				{
-					//todo
-					break;
-				}
+				case (sf::Event::GainedFocus):
+					{
+						//todo
+						theGame.resume();
+						break;
+					}
 
-				//todo: other events
+				case (sf::Event::Resized):
+					{
+						sf::Vector2u s(WIDTH, HEIGHT);
+						window.setSize(s);
+						break;
+					}
 
-			} // switch
+				case (sf::Event::KeyPressed):
+					{
+						//todo
+						if (event.key.code == sf::Keyboard::Escape) {
 
-		} // event poll loop
+						}
+						else if (event.key.code == sf::Keyboard::Space) {
+							if (theGame.isPaused())
+								theGame.resume();
+							else
+								theGame.pause();
+						}
+						break;
+					}
 
-		window.clear(sf::Color::Black);
+				case (sf::Event::MouseButtonPressed):
+					{
+						//todo
+						break;
+					}
 
-		//draw stuff here
-		sf::CircleShape shape(50);
+					//todo: other events
 
-		// set the shape color to green
-		shape.setFillColor(sf::Color(100, 250, 50));
+				} // switch
 
-		window.draw(shape);
+			} // event poll loop
 
-		window.display();
+			window.clear(sf::Color(BG_COLOR));
+
+			window.display();
+		} // level loop
+
+		theGame.nextLevel();
 
 	} // game loop
 

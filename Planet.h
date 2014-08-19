@@ -6,7 +6,7 @@
 class Planet {
 public:
 
-	unsigned int radius;
+	float radius;
 	sf::Vector2u getPull(const sf::Vector2u);
 
 private:

@@ -1,17 +1,29 @@
 #include "Game.h"
 
+void Game::init() {
+
+}
+
+bool Game::nextLevel() {
+	if (current_level == NULL)
+		return false;
+	if (current_level->id == _levels.size()) {
+		current_level = NULL;
+		return false;
+	} else {
+		current_level = &(_levels[current_level->id]);
+		return true;
+	}
+}
+
 bool Game::isPaused() {
-	return _state == PAUSED;
+	return current_level->_state == PAUSED;
 }
 
 void Game::pause() {
-	_state = PAUSED;
+	current_level->_state = PAUSED;
 }
 
 void Game::resume() {
 
-}
-
-sf::Vector2u Game::getPlayerPos() {
-	return _player.pos;
 }
