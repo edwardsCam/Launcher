@@ -3,9 +3,11 @@
 
 #include <vector>
 #include "Level.h"
+#include "Parser.h"
 
 class Game {
 public:
+
 	void init();
 
 	Level * current_level;

@@ -1,7 +1,12 @@
 #include "Game.h"
 
 void Game::init() {
-
+	_levels = Parser::parseLevels();
+	if (_levels.size()) {
+		current_level = &_levels[0];
+		current_level->active = true;
+	} else
+		current_level = NULL;
 }
 
 bool Game::nextLevel() {

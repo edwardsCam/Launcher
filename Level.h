@@ -5,15 +5,8 @@
 #include "Planet.h"
 #include "Player.h"
 
-struct PlanetInfo {
-	Planet p;
-	unsigned int xpos;
-	unsigned int ypos;
-};
-
 enum gamestate {
-	INTRO = 0,
-	PAUSED = 1,
+	PAUSED = 0,
 	INITIAL_READY = 10,
 	DRAGGING  = INITIAL_READY + 1,
 	LAUNCHING = INITIAL_READY + 2,
@@ -22,7 +15,7 @@ enum gamestate {
 
 class Level {
 public:
-
+	Level();
 	int id;
 	Player _player;
 	bool active;
@@ -32,9 +25,13 @@ public:
 
 	void drawPlanets(sf::RenderWindow window);
 
+	void addPlanet(Planet p);
+	void setPlayerPos(sf::Vector2u pos);
+	void setPlayerPos(unsigned int x, unsigned int y);
+
 private:
 
-	std::vector<PlanetInfo> _planets;
+	std::vector<Planet> _planets;
 
 };
 

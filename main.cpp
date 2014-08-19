@@ -44,6 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				case (sf::Event::Closed):
 					{
 						//todo save state? or other things before closing
+						theGame.current_level->active = false;
 						window.close();
 						break;
 					}
@@ -101,7 +102,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			window.display();
 		} // level loop
 
-		theGame.nextLevel();
+		if (!theGame.nextLevel())
+			window.close();
 
 	} // game loop
 

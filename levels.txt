@@ -1,0 +1,11 @@
+# Level List
+# + and - denote start and end of definitions
+# parameters:
+#    size x y
+
++
+s: 200 200
+p: 100 300 400
+p: 50 400 500
+
+-
