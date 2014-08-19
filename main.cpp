@@ -7,25 +7,20 @@
 #include "SFML\Window.hpp"
 #include "SFML\Graphics.hpp"
 
-// Global variables
+// Globals
 
-unsigned int _width, _height;
 
 // Definitions
-
 #define MAX_FRAMERATE 24
-
-// Forward declarations of functions included in this code module:
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+#define WIDTH 800
+#define HEIGHT 600
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
-	_width = 800;
-	_height = 600;
-
-	sf::Window window;
-	window.create(sf::VideoMode(_width, _height), "Planet Launcher");
+	sf::RenderWindow window;
+	window.create(sf::VideoMode(WIDTH, HEIGHT), "Planet Launcher");
 	window.setFramerateLimit(MAX_FRAMERATE);
+	window.setKeyRepeatEnabled(false);
 
 	//game loop
 	while (window.isOpen())
@@ -42,17 +37,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					break;
 				}
 
+			case (sf::Event::LostFocus):
+				{
+					//todo
+					//theGame.pause();
+					break;
+				}
+
+			case (sf::Event::GainedFocus):
+				{
+					//todo
+					//theGame.resume();
+					break;
+				}
+
 			case (sf::Event::Resized):
 				{
-					sf::Vector2u size = window.getSize();
-					_width = size.x;
-					_height = size.y;
+					sf::Vector2u s(WIDTH, HEIGHT);
+					window.setSize(s);
 					break;
 				}
 
 			case (sf::Event::KeyPressed):
 				{
 					//todo
+					if (event.key.code == sf::Keyboard::Escape) {
+
+					}
+					else if (event.key.code == sf::Keyboard::Space) {
+						/*
+						if (theGame.isPaused())
+							theGame.resume();
+						else
+							theGame.pause();
+							*/
+					}
 					break;
 				}
 
@@ -64,9 +83,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				//todo: other events
 
-			}
-		}
-	}
+			} // switch
+
+		} // event poll loop
+
+		window.clear(sf::Color::Black);
+
+		//draw stuff here
+		sf::CircleShape shape(50);
+
+		// set the shape color to green
+		shape.setFillColor(sf::Color(100, 250, 50));
+
+		window.draw(shape);
+
+		window.display();
+
+	} // game loop
 
 	return 0;
 }
@@ -81,33 +114,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 //
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-
-	PAINTSTRUCT ps;
-	HDC hdc;
-	TCHAR greeting[] = _T("Hello, World!");
-
-	switch (message)
-	{
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-
-		// Here your application is laid out.
-		// For this introduction, we just print out "Hello, World!"
-		// in the top left corner.
-		TextOut(hdc,
-			5, 5,
-			greeting, _tcslen(greeting));
-		// End application-specific layout section.
-
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-		break;
-	}
-
 	return 0;
 }
