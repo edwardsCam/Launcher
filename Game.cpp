@@ -13,3 +13,7 @@ void Game::pause() {
 void Game::resume() {
 
 }
+
+sf::Vector2u Game::getPlayerPos() {
+	return _player.pos;
+}
