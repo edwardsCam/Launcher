@@ -7,6 +7,9 @@
 #include "SFML\Window.hpp"
 #include "SFML\Graphics.hpp"
 
+#include "Game.h"
+#include "Planet.h"
+
 // Globals
 
 
