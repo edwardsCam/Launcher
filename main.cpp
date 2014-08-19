@@ -25,6 +25,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	window.setFramerateLimit(MAX_FRAMERATE);
 	window.setKeyRepeatEnabled(false);
 
+	Game theGame;
+
 	//game loop
 	while (window.isOpen())
 	{	
@@ -43,14 +45,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			case (sf::Event::LostFocus):
 				{
 					//todo
-					//theGame.pause();
+					theGame.pause();
 					break;
 				}
 
 			case (sf::Event::GainedFocus):
 				{
 					//todo
-					//theGame.resume();
+					theGame.resume();
 					break;
 				}
 
@@ -68,12 +70,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					}
 					else if (event.key.code == sf::Keyboard::Space) {
-						/*
 						if (theGame.isPaused())
 							theGame.resume();
 						else
 							theGame.pause();
-							*/
 					}
 					break;
 				}

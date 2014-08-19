@@ -1,13 +1,11 @@
 #include "Game.h"
 
 bool Game::isPaused() {
-
-	//todo
-	return false;
+	return _state == PAUSED;
 }
 
 void Game::pause() {
-
+	_state = PAUSED;
 }
 
 void Game::resume() {
