@@ -6,8 +6,8 @@
 class Player {
 public:
 	Player();
-	sf::Vector2u pos;
-	sf::Vector2u velocity;
+	sf::Vector2i pos;
+	sf::Vector2i velocity;
 	unsigned int speed;
 
 private:

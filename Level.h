@@ -21,13 +21,14 @@ public:
 	bool active;
 	gamestate _state;
 
-	sf::Vector2u getPlayerPos();
+	sf::Vector2i getPlayerPos();
 
 	void drawPlanets(sf::RenderWindow * window);
 	void drawPlayer(sf::RenderWindow * window);
+	void movePlayer(int x, int y);
 
 	void addPlanet(Planet p);
-	void setPlayerPos(sf::Vector2u pos);
+	void setPlayerPos(sf::Vector2i pos);
 	void setPlayerPos(unsigned int x, unsigned int y);
 
 private:

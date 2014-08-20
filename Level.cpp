@@ -9,7 +9,7 @@ Level::Level() {
 	_state = INITIAL_READY;
 }
 
-sf::Vector2u Level::getPlayerPos() {
+sf::Vector2i Level::getPlayerPos() {
 	return _player.pos;
 }
 
@@ -30,11 +30,16 @@ void Level::drawPlayer(sf::RenderWindow * window) {
 	window->draw(circle);
 }
 
+void Level::movePlayer(int x, int y) {
+	_player.pos.x += x;
+	_player.pos.y += y;
+}
+
 void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
 }
 
-void Level::setPlayerPos(sf::Vector2u pos) {
+void Level::setPlayerPos(sf::Vector2i pos) {
 	_player.pos = pos;
 }
 

@@ -24,7 +24,7 @@ std::vector<Level> Parser::parseLevels() {
 							iss >> thePlanet.radius >> thePlanet.xpos >> thePlanet.ypos;
 							theLevel.addPlanet(thePlanet);
 						} else if (line[0] == 's') {
-							sf::Vector2u pos;
+							sf::Vector2i pos;
 							line = line.substr(3, line.length() - 2);
 							std::istringstream iss(line);
 							iss >> pos.x >> pos.y;
