@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			} // event poll loop
 
 			window.clear(sf::Color(BG_COLOR));
-
+			theGame.current_level->drawPlanets(&window);
 			window.display();
 		} // level loop
 

@@ -23,7 +23,7 @@ public:
 
 	sf::Vector2u getPlayerPos();
 
-	void drawPlanets(sf::RenderWindow window);
+	void drawPlanets(sf::RenderWindow * window);
 
 	void addPlanet(Planet p);
 	void setPlayerPos(sf::Vector2u pos);

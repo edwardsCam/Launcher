@@ -9,13 +9,13 @@ sf::Vector2u Level::getPlayerPos() {
 	return _player.pos;
 }
 
-void Level::drawPlanets(sf::RenderWindow window) {
+void Level::drawPlanets(sf::RenderWindow * window) {
 	for (int i = 0; i < _planets.size(); i++) {
 		Planet thePlanet = _planets[i];
 		sf::CircleShape shape(thePlanet.radius);
 		shape.setPosition(thePlanet.xpos, thePlanet.ypos);
 		shape.setFillColor(sf::Color(rand() % 256, rand() % 256, rand() % 256));
-		window.draw(shape);
+		window->draw(shape);
 	}
 }
 

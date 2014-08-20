@@ -19,18 +19,18 @@ std::vector<Level> Parser::parseLevels() {
 					Level theLevel;
 					theLevel.id = levelId++;
 					while (parsing_level) {
-						if (line[0] == 's') {
-							sf::Vector2u pos;
-							line = line.substr(3, line.length() - 2);
-							std::istringstream iss(line);
-							iss >> pos.x >> pos.y;
-							theLevel.setPlayerPos(pos);
-						} else if (line[0] == 'p') {
+						if (line[0] == 'p') {
 							Planet thePlanet;
 							line = line.substr(3, line.length() - 2);
 							std::istringstream iss(line);
 							iss >> thePlanet.radius >> thePlanet.xpos >> thePlanet.ypos;
 							theLevel.addPlanet(thePlanet);
+						} else if (line[0] == 's') {
+							sf::Vector2u pos;
+							line = line.substr(3, line.length() - 2);
+							std::istringstream iss(line);
+							iss >> pos.x >> pos.y;
+							theLevel.setPlayerPos(pos);
 						}
 						if (line[0] == '-') {
 							parsing_level = false;
