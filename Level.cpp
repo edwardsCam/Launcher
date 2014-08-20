@@ -22,6 +22,13 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 	}
 }
 
+void Level::drawPlayer(sf::RenderWindow * window) {
+	sf::CircleShape circle(25);
+	circle.setPosition(_player.pos.x, _player.pos.y);
+	circle.setFillColor(sf::Color::Black);
+	window->draw(circle);
+}
+
 void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
 }
