@@ -1,21 +1,24 @@
 #include "Level.h"
+#include "Parser.h"
+#include "Game.h"
+
+#define color _colors[i]
 
 Level::Level() {
 	active = false;
-
 }
 
 sf::Vector2u Level::getPlayerPos() {
 	return _player.pos;
 }
 
-void Level::drawPlanets(sf::RenderWindow window) {
+void Level::drawPlanets(sf::RenderWindow * window) {
 	for (int i = 0; i < _planets.size(); i++) {
 		Planet thePlanet = _planets[i];
-		sf::CircleShape shape(thePlanet.radius);
-		shape.setPosition(thePlanet.xpos, thePlanet.ypos);
-		shape.setFillColor(sf::Color(rand() % 256, rand() % 256, rand() % 256));
-		window.draw(shape);
+		sf::CircleShape circle(thePlanet.radius);
+		circle.setPosition(thePlanet.xpos, thePlanet.ypos);
+		circle.setFillColor(sf::Color(Game::_colors[i]));
+		window->draw(circle);
 	}
 }
 

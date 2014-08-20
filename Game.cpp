@@ -1,10 +1,14 @@
 #include "Game.h"
 
-void Game::init() {
-	_levels = Parser::parseLevels();
+const std::vector<sf::Color> Game::_colors = Parser::parseColors();
+
+void Game::init(sf::RenderWindow * window) {
+	_window = window;
+	_levels = Parser::parseLevels();	
 	if (_levels.size()) {
 		current_level = &_levels[0];
 		current_level->active = true;
+		current_level->drawPlanets(_window);
 	} else
 		current_level = NULL;
 }

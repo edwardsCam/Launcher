@@ -5,7 +5,7 @@
 
 class Player {
 public:
-
+	Player();
 	sf::Vector2u pos;
 	sf::Vector2u velocity;
 	unsigned int speed;
