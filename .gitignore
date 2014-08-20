@@ -24,6 +24,7 @@
 *.sdf
 *.opensdf
 *.sln
+*.unsuccessfulbuild
 Debug/*.log
 Debug/*.tlog
 Debug/*.lastbuildstate

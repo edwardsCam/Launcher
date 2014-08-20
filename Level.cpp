@@ -6,6 +6,7 @@
 
 Level::Level() {
 	active = false;
+	_state = INITIAL_READY;
 }
 
 sf::Vector2u Level::getPlayerPos() {
@@ -23,7 +24,7 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 }
 
 void Level::drawPlayer(sf::RenderWindow * window) {
-	sf::CircleShape circle(25);
+	sf::CircleShape circle(15);
 	circle.setPosition(_player.pos.x, _player.pos.y);
 	circle.setFillColor(sf::Color::Black);
 	window->draw(circle);

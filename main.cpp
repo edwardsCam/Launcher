@@ -51,14 +51,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				case (sf::Event::LostFocus):
 					{
-						//todo
 						theGame.pause();
 						break;
 					}
 
 				case (sf::Event::GainedFocus):
 					{
-						//todo
 						theGame.resume();
 						break;
 					}

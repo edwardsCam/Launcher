@@ -1,7 +1,5 @@
 #include "Parser.h"
 #include <fstream>
-#include <iostream>
-#include <string>
 #include <sstream>
 
 std::vector<Level> Parser::parseLevels() {
@@ -46,8 +44,6 @@ std::vector<Level> Parser::parseLevels() {
 		} // getline
 	} // if open
 
-
-	//todo
 	return ret;
 }
 
