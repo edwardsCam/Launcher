@@ -19,6 +19,7 @@ public:
 	int id;
 	bool active;
 	gamestate _state;
+	gamestate _prevstate;
 	Player _player;
 
 	unsigned int initx, inity;

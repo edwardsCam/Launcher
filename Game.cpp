@@ -29,9 +29,10 @@ bool Game::isPaused() {
 }
 
 void Game::pause() {
+	current_level->_prevstate = current_level->_state;
 	current_level->_state = PAUSED;
 }
 
 void Game::resume() {
-
+	current_level->_state = current_level->_prevstate;
 }

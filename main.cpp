@@ -21,10 +21,22 @@ unsigned int launchCount = 0;
 #define BG_COLOR 175,220,220
 #define IS curr->_state == 
 
-void draw(sf::RenderWindow * window, Game * theGame) {
+void draw(sf::RenderWindow * window, Level * curr) {
 	window->clear(sf::Color(BG_COLOR));
-	theGame->current_level->drawPlanets(window);
-	theGame->current_level->drawPlayer(window);
+	if (IS PAUSED) {
+		sf::Font f;
+		sf::Text t;
+		f.loadFromFile("arial.ttf");
+		t.setFont(f);
+		t.setCharacterSize(40);
+		t.setColor(sf::Color::Red);
+		t.setStyle(sf::Text::Style::Bold);
+		t.setPosition(300, 200);
+		t.setString("PAUSED");
+		window->draw(t);
+	}
+	curr->drawPlanets(window);
+	curr->drawPlayer(window);
 	window->display();
 }
 
@@ -118,28 +130,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::MouseButtonPressed):
 					{
-						//todo
-						sf::Vector2i playerpos = curr->_player.pos;
-						while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-							sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-							if ((mousepos.x - playerpos.x) < 30 && (mousepos.y - playerpos.y) < 30) {
-								curr->_state = DRAGGING;
-								break;
+						if (!IS PAUSED) {
+							sf::Vector2i playerpos = curr->_player.pos;
+							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
+								if ((mousepos.x - playerpos.x) < 30 && (mousepos.y - playerpos.y) < 30) {
+									curr->_state = DRAGGING;
+									break;
+								}
 							}
 						}
 						break;
 					}
 				case (sf::Event::MouseButtonReleased):
 					{
-						if (IS DRAGGING)
-							curr->_state = LAUNCHING;
+						if (!IS PAUSED) {
+							if (IS DRAGGING)
+								curr->_state = LAUNCHING;
+						}
 						break;
 					}
 					//todo: other events
 				} // switch
 			} // event poll loop
 			update(&window, curr);
-			draw(&window, &theGame);
+			draw(&window, curr);
 		} // level loop
 		if (!theGame.nextLevel())
 			window.close();

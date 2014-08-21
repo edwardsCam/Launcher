@@ -7,6 +7,7 @@
 Level::Level() {
 	active = false;
 	_state = INITIAL_READY;
+	_prevstate = INITIAL_READY;
 }
 
 void Level::drawPlanets(sf::RenderWindow * window) {
