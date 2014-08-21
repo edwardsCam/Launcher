@@ -20,6 +20,7 @@ unsigned int launchCount = 0;
 #define HEIGHT 600
 #define BG_COLOR 175,220,220
 #define IS curr->_state == 
+#define ISNT curr->_state !=
 
 void draw(sf::RenderWindow * window, Level * curr) {
 	window->clear(sf::Color(BG_COLOR));
@@ -89,7 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		while (curr && curr->active)
 		{
 			sf::Event event;
-			while (window.pollEvent(event)) {
+			if (window.pollEvent(event)) {
 				switch (event.type) {
 				case (sf::Event::Closed):
 					{
@@ -130,7 +131,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::MouseButtonPressed):
 					{
-						if (!IS PAUSED) {
+						if (ISNT PAUSED && ISNT IN_PLAY) {
 							sf::Vector2i playerpos = curr->_player.pos;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
@@ -144,7 +145,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::MouseButtonReleased):
 					{
-						if (!IS PAUSED) {
+						if (ISNT PAUSED) {
 							if (IS DRAGGING)
 								curr->_state = LAUNCHING;
 						}
@@ -152,7 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 					//todo: other events
 				} // switch
-			} // event poll loop
+			} // event poll
 			update(&window, curr);
 			draw(&window, curr);
 		} // level loop
