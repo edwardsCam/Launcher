@@ -9,10 +9,6 @@ Level::Level() {
 	_state = INITIAL_READY;
 }
 
-sf::Vector2i Level::getPlayerPos() {
-	return _player.pos;
-}
-
 void Level::drawPlanets(sf::RenderWindow * window) {
 	for (int i = 0; i < _planets.size(); i++) {
 		Planet thePlanet = _planets[i];

@@ -17,11 +17,11 @@ class Level {
 public:
 	Level();
 	int id;
-	Player _player;
 	bool active;
 	gamestate _state;
+	Player _player;
 
-	sf::Vector2i getPlayerPos();
+	unsigned int initx, inity;
 
 	void drawPlanets(sf::RenderWindow * window);
 	void drawPlayer(sf::RenderWindow * window);
@@ -32,9 +32,7 @@ public:
 	void setPlayerPos(unsigned int x, unsigned int y);
 
 private:
-
 	std::vector<Planet> _planets;
-
 };
 
 #endif

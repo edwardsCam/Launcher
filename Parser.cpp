@@ -29,6 +29,8 @@ std::vector<Level> Parser::parseLevels() {
 							std::istringstream iss(line);
 							iss >> pos.x >> pos.y;
 							theLevel.setPlayerPos(pos);
+							theLevel.initx = pos.x;
+							theLevel.inity = pos.y;
 						}
 						if (line[0] == '-') {
 							parsing_level = false;

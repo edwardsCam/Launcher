@@ -5,16 +5,10 @@
 
 class Planet {
 public:
-
 	float radius;
 	unsigned int xpos;
 	unsigned int ypos;
 	sf::Vector2u getPull(const sf::Vector2u);
-
-private:
-
-
-
 };
 
 #endif

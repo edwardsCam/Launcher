@@ -9,10 +9,8 @@ class Game {
 public:
 
 	static const std::vector<sf::Color> _colors;
-
-	sf::RenderWindow * _window;
-
 	void init(sf::RenderWindow * window);
+	sf::RenderWindow * _window;
 
 	Level * current_level;
 	bool nextLevel();
@@ -22,9 +20,7 @@ public:
 	void resume();
 
 private:
-
 	std::vector<Level> _levels;
-
 };
 
 #endif

@@ -12,7 +12,7 @@
 #include "Planet.h"
 
 // Globals
-
+unsigned int launchCount = 0;
 
 // Definitions
 #define MAX_FRAMERATE 24
@@ -28,11 +28,7 @@ void draw(sf::RenderWindow * window, Game * theGame) {
 	window->display();
 }
 
-void update(sf::RenderWindow * window, Level* curr) {
-	if (IS DRAGGING) {
-		sf::Vector2i mpos = sf::Mouse::getPosition(*window);
-		curr->setPlayerPos(mpos.x-15, mpos.y-15);
-	}
+void check_bounds(Level * curr) {
 	if (curr->_player.pos.x < 0)
 		curr->_player.pos.x = 0;
 	if (curr->_player.pos.y < 0)
@@ -42,6 +38,26 @@ void update(sf::RenderWindow * window, Level* curr) {
 	if (curr->_player.pos.y > 570)
 		curr->_player.pos.y = 570;
 }
+
+void update(sf::RenderWindow * window, Level* curr) {
+	if (IS DRAGGING) {
+		sf::Vector2i mpos = sf::Mouse::getPosition(*window);
+		curr->setPlayerPos(mpos.x-15, mpos.y-15);
+	}
+	else if (IS LAUNCHING) {
+		curr->_player.velocity.x = 5;
+		curr->_player.velocity.y = -10;
+		if (launchCount++ > 20)
+			curr->_state = IN_PLAY;
+	}
+	else if (IS IN_PLAY) {
+		curr->_player.pos.x += curr->_player.velocity.x;
+		curr->_player.pos.y += curr->_player.velocity.y;
+	}
+	check_bounds(curr);
+}
+
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 

@@ -9,11 +9,6 @@ public:
 	sf::Vector2i pos;
 	sf::Vector2i velocity;
 	unsigned int speed;
-
-private:
-
-
-
 };
 
 #endif
