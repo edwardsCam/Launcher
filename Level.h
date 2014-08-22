@@ -23,6 +23,7 @@ public:
 	Player _player;
 
 	unsigned int initx, inity;
+	unsigned int start_angle;
 
 	void drawPlanets(sf::RenderWindow * window);
 	void drawPlayer(sf::RenderWindow * window);

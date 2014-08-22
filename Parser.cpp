@@ -27,10 +27,12 @@ std::vector<Level> Parser::parseLevels() {
 							sf::Vector2i pos;
 							line = line.substr(3, line.length() - 2);
 							std::istringstream iss(line);
-							iss >> pos.x >> pos.y;
+							int angle;
+							iss >> pos.x >> pos.y >> angle;
 							theLevel.setPlayerPos(pos);
 							theLevel.initx = pos.x;
 							theLevel.inity = pos.y;
+							theLevel.start_angle = angle;
 						}
 						if (line[0] == '-') {
 							parsing_level = false;

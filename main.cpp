@@ -15,12 +15,13 @@
 unsigned int launchCount = 0;
 
 // Definitions
-#define MAX_FRAMERATE 24
+#define MAX_FRAMERATE 32
 #define WIDTH 800
 #define HEIGHT 600
 #define BG_COLOR 175,220,220
 #define IS curr->_state == 
 #define ISNT curr->_state !=
+#define SLINGSHOT_LEN 50
 
 void draw(sf::RenderWindow * window, Level * curr) {
 	window->clear(sf::Color(BG_COLOR));
@@ -35,6 +36,21 @@ void draw(sf::RenderWindow * window, Level * curr) {
 		t.setPosition(300, 200);
 		t.setString("PAUSED");
 		window->draw(t);
+	} else if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
+		unsigned int a = curr->start_angle;
+		unsigned int x1 = curr->initx+15;
+		unsigned int y1 = curr->inity+15;
+		sf::Vertex v1, v2, v3;
+		v2.position = sf::Vector2f(curr->_player.pos.x+15, curr->_player.pos.y+15);
+		v1.position = sf::Vector2f(x1 - cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
+		v3.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 + sin(a) * SLINGSHOT_LEN);
+		v1.color = sf::Color::Red;
+		v2.color = sf::Color::Red;
+		v3.color = sf::Color::Red;
+		sf::Vertex line1[2] = {v1, v2};
+		sf::Vertex line2[2] = {v2, v3};
+		window->draw(line1, 2, sf::Lines);
+		window->draw(line2, 2, sf::Lines);
 	}
 	curr->drawPlanets(window);
 	curr->drawPlayer(window);
