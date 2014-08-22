@@ -8,7 +8,7 @@ public:
 	float radius;
 	unsigned int xpos;
 	unsigned int ypos;
-	sf::Vector2u getPull(const sf::Vector2u);
+	sf::Vector2f getPull(const sf::Vector2i);
 };
 
 #endif

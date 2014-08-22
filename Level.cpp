@@ -11,7 +11,8 @@ Level::Level() {
 }
 
 void Level::drawPlanets(sf::RenderWindow * window) {
-	for (int i = 0; i < _planets.size(); i++) {
+	numPlanets = _planets.size();
+	for (int i = 0; i < numPlanets; i++) {
 		Planet thePlanet = _planets[i];
 		sf::CircleShape circle(thePlanet.radius);
 		circle.setPosition(thePlanet.xpos, thePlanet.ypos);
@@ -22,14 +23,14 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 
 void Level::drawPlayer(sf::RenderWindow * window) {
 	sf::CircleShape circle(15);
-	circle.setPosition(_player.pos.x, _player.pos.y);
+	circle.setPosition(_player.p.x, _player.p.y);
 	circle.setFillColor(sf::Color::Black);
 	window->draw(circle);
 }
 
 void Level::movePlayer(int x, int y) {
-	_player.pos.x += x;
-	_player.pos.y += y;
+	_player.p.x += x;
+	_player.p.y += y;
 }
 
 void Level::addPlanet(Planet p) {
@@ -37,10 +38,14 @@ void Level::addPlanet(Planet p) {
 }
 
 void Level::setPlayerPos(sf::Vector2i pos) {
-	_player.pos = pos;
+	_player.p = pos;
 }
 
 void Level::setPlayerPos(unsigned int x, unsigned int y) {
-	_player.pos.x = x;
-	_player.pos.y = y;
+	_player.p.x = x;
+	_player.p.y = y;
+}
+
+Planet * Level::planetAt(int i) {
+	return &_planets[i];
 }

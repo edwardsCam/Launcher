@@ -19,9 +19,12 @@ unsigned int launchCount = 0;
 #define WIDTH 800
 #define HEIGHT 600
 #define BG_COLOR 175,220,220
+#define _ball curr->_player
 #define IS curr->_state == 
 #define ISNT curr->_state !=
+#define SET curr->_state =
 #define SLINGSHOT_LEN 50
+#define SPRING 0.005
 
 void draw(sf::RenderWindow * window, Level * curr) {
 	window->clear(sf::Color(BG_COLOR));
@@ -41,7 +44,7 @@ void draw(sf::RenderWindow * window, Level * curr) {
 		unsigned int x1 = curr->initx+15;
 		unsigned int y1 = curr->inity+15;
 		sf::Vertex v1, v2, v3;
-		v2.position = sf::Vector2f(curr->_player.pos.x+15, curr->_player.pos.y+15);
+		v2.position = sf::Vector2f(curr->_player.p.x+15, curr->_player.p.y+15);
 		v1.position = sf::Vector2f(x1 - cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
 		v3.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 + sin(a) * SLINGSHOT_LEN);
 		v1.color = sf::Color::Red;
@@ -58,14 +61,21 @@ void draw(sf::RenderWindow * window, Level * curr) {
 }
 
 void check_bounds(Level * curr) {
-	if (curr->_player.pos.x < 0)
-		curr->_player.pos.x = 0;
-	if (curr->_player.pos.y < 0)
-		curr->_player.pos.y = 0;
-	if (curr->_player.pos.x > 770)
-		curr->_player.pos.x = 770;
-	if (curr->_player.pos.y > 570)
-		curr->_player.pos.y = 570;
+	if (curr->_player.p.x < 0)
+		curr->_player.p.x = 0;
+	if (curr->_player.p.y < 0)
+		curr->_player.p.y = 0;
+	if (curr->_player.p.x > 770)
+		curr->_player.p.x = 770;
+	if (curr->_player.p.y > 570)
+		curr->_player.p.y = 570;
+}
+
+void m(Player * p) {
+	p->v.x += p->a.x;
+	p->v.y += p->a.y;
+	p->p.x += p->v.x;
+	p->p.y += p->v.y;
 }
 
 void update(sf::RenderWindow * window, Level* curr) {
@@ -74,19 +84,40 @@ void update(sf::RenderWindow * window, Level* curr) {
 		curr->setPlayerPos(mpos.x-15, mpos.y-15);
 	}
 	else if (IS LAUNCHING) {
-		curr->_player.velocity.x = 5;
-		curr->_player.velocity.y = -10;
-		if (launchCount++ > 20)
-			curr->_state = IN_PLAY;
+		bool left = curr->_player.p.x < curr->initx;
+		int distx, disty;
+		distx = curr->initx - _ball.p.x;
+		disty = curr->inity - _ball.p.y;
+		double ax, ay;
+		ax = (double)distx * SPRING;
+		ay = (double)disty * SPRING;
+		_ball.a.x = ax;
+		_ball.a.y = ay;
+		m(&curr->_player);
+		if (left) {
+			if (_ball.p.x >= curr->initx)
+				SET IN_PLAY;
+		} else {
+			if (_ball.p.x < curr->initx)
+				SET IN_PLAY;
+		}
 	}
 	else if (IS IN_PLAY) {
-		curr->_player.pos.x += curr->_player.velocity.x;
-		curr->_player.pos.y += curr->_player.velocity.y;
+		std::vector<sf::Vector2f> accels;
+		double sumx = 0;
+		double sumy = 0;
+		for (int i = 0; i < curr->numPlanets; i++) {
+			sf::Vector2f a = curr->planetAt(i)->getPull(_ball.p);
+			accels.push_back(a);
+			sumx += a.x;
+			sumy += a.y;
+		}
+		_ball.a.x = sumx;
+		_ball.a.y = sumy;
+		m(&_ball);
 	}
 	check_bounds(curr);
 }
-
-
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -148,7 +179,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				case (sf::Event::MouseButtonPressed):
 					{
 						if (ISNT PAUSED && ISNT IN_PLAY) {
-							sf::Vector2i playerpos = curr->_player.pos;
+							sf::Vector2i playerpos = curr->_player.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
 								if ((mousepos.x - playerpos.x) < 30 && (mousepos.y - playerpos.y) < 30) {

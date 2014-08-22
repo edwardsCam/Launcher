@@ -22,6 +22,7 @@ public:
 	gamestate _prevstate;
 	Player _player;
 
+	unsigned int numPlanets;
 	unsigned int initx, inity;
 	unsigned int start_angle;
 
@@ -32,6 +33,8 @@ public:
 	void addPlanet(Planet p);
 	void setPlayerPos(sf::Vector2i pos);
 	void setPlayerPos(unsigned int x, unsigned int y);
+
+	Planet * planetAt(int i);
 
 private:
 	std::vector<Planet> _planets;
