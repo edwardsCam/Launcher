@@ -11,8 +11,9 @@
 #include "Game.h"
 #include "Planet.h"
 
+#define _debug false
+
 // Globals
-unsigned int launchCount = 0;
 
 // Definitions
 #define MAX_FRAMERATE 32
@@ -61,8 +62,18 @@ void check_bounds(Level * curr) {
 void m(Player * p) {
 	p->v.x += p->a.x;
 	p->v.y += p->a.y;
-	p->p.x += p->v.x;
-	p->p.y += p->v.y;
+	p->speed_bufferx += p->v.x;
+	p->speed_buffery += p->v.y;
+	if (p->speed_bufferx >= 1 || p->speed_bufferx <= -1) {
+		int s = (int)p->speed_bufferx;
+		p->p.x += s;
+		p->speed_bufferx -= s;
+	}
+	if (p->speed_buffery >= 1 || p->speed_buffery <= -1) {
+		int s = (int)p->speed_buffery;
+		p->p.y += s;
+		p->speed_buffery -= s;
+	}
 }
 
 void update(sf::RenderWindow * window, Level* curr) {
@@ -80,27 +91,22 @@ void update(sf::RenderWindow * window, Level* curr) {
 		ay = (double)disty * SPRING;
 		_ball.a.x = ax;
 		_ball.a.y = ay;
+		//sf::Vector2f pull = curr->getGravitationalPull();
+		//_ball.a.x += pull.x;
+		//_ball.a.y += pull.y;
 		m(&_ball);
 		if (left) {
 			if (_ball.p.x >= curr->initx)
 				SET IN_PLAY;
 		} else {
-			if (_ball.p.x < curr->initx)
+			if (_ball.p.x <= curr->initx)
 				SET IN_PLAY;
 		}
 	}
 	else if (IS IN_PLAY) {
-		std::vector<sf::Vector2f> accels;
-		double sumx = 0;
-		double sumy = 0;
-		for (int i = 0; i < curr->numPlanets; i++) {
-			sf::Vector2f a = curr->planetAt(i)->getPull(_ball.p);
-			accels.push_back(a);
-			sumx += a.x;
-			sumy += a.y;
-		}
-		_ball.a.x = sumx;
-		_ball.a.y = sumy;
+		sf::Vector2f pull = curr->getGravitationalPull();
+		_ball.a.x = pull.x;
+		_ball.a.y = pull.y;
 		m(&_ball);
 	}
 	check_bounds(curr);
@@ -135,7 +141,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::LostFocus):
 					{
-						theGame.pause();
+						if (!_debug)
+							theGame.pause();
 						break;
 					}
 				case (sf::Event::GainedFocus):
@@ -153,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					{
 						//todo
 						if (event.key.code == sf::Keyboard::Escape) {
-
+							SET IN_PLAY;
 						}
 						else if (event.key.code == sf::Keyboard::Space) {
 							if (theGame.isPaused())
@@ -166,10 +173,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				case (sf::Event::MouseButtonPressed):
 					{
 						if (ISNT PAUSED && ISNT IN_PLAY) {
-							sf::Vector2i playerpos = _ball.p;
+							sf::Vector2u playerpos = _ball.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-								if ((mousepos.x - playerpos.x) < 30 && (mousepos.y - playerpos.y) < 30) {
+								if (abs(mousepos.x - (int)playerpos.x) <=15 && abs(mousepos.y - (int)playerpos.y) <= 15) {
 									curr->_state = DRAGGING;
 									break;
 								}

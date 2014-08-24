@@ -12,7 +12,7 @@ Level::Level() {
 
 void Level::drawPlanets(sf::RenderWindow * window) {
 	numPlanets = _planets.size();
-	for (int i = 0; i < numPlanets; i++) {
+	for (unsigned int i = 0; i < numPlanets; i++) {
 		Planet thePlanet = _planets[i];
 		float r = thePlanet.radius;
 		sf::CircleShape circle(r);
@@ -24,7 +24,7 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 
 void Level::drawPlayer(sf::RenderWindow * window) {
 	sf::CircleShape circle(15);
-	circle.setPosition(_player.p.x-15, _player.p.y-15);
+	circle.setPosition((float)_player.p.x-15, (float)_player.p.y-15);
 	circle.setFillColor(sf::Color::Black);
 	window->draw(circle);
 }
@@ -38,7 +38,7 @@ void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
 }
 
-void Level::setPlayerPos(sf::Vector2i pos) {
+void Level::setPlayerPos(sf::Vector2u pos) {
 	_player.p = pos;
 }
 
@@ -49,4 +49,15 @@ void Level::setPlayerPos(unsigned int x, unsigned int y) {
 
 Planet * Level::planetAt(int i) {
 	return &_planets[i];
+}
+
+sf::Vector2f Level::getGravitationalPull() {
+	float sumx = 0;
+	float sumy = 0;
+	for (unsigned int i = 0; i < numPlanets; i++) {
+		sf::Vector2f a = (&_planets[i])->getPull(_player.p);
+		sumx += a.x;
+		sumy += a.y;
+	}
+	return sf::Vector2f(sumx, sumy);
 }

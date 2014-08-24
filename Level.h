@@ -31,10 +31,11 @@ public:
 	void movePlayer(int x, int y);
 
 	void addPlanet(Planet p);
-	void setPlayerPos(sf::Vector2i pos);
+	void setPlayerPos(sf::Vector2u pos);
 	void setPlayerPos(unsigned int x, unsigned int y);
 
 	Planet * planetAt(int i);
+	sf::Vector2f getGravitationalPull();
 
 private:
 	std::vector<Planet> _planets;
