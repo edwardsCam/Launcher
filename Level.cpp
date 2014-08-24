@@ -14,8 +14,9 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 	numPlanets = _planets.size();
 	for (int i = 0; i < numPlanets; i++) {
 		Planet thePlanet = _planets[i];
-		sf::CircleShape circle(thePlanet.radius);
-		circle.setPosition(thePlanet.xpos, thePlanet.ypos);
+		float r = thePlanet.radius;
+		sf::CircleShape circle(r);
+		circle.setPosition(thePlanet.xpos-r, thePlanet.ypos-r);
 		circle.setFillColor(sf::Color(Game::color));
 		window->draw(circle);
 	}
@@ -23,7 +24,7 @@ void Level::drawPlanets(sf::RenderWindow * window) {
 
 void Level::drawPlayer(sf::RenderWindow * window) {
 	sf::CircleShape circle(15);
-	circle.setPosition(_player.p.x, _player.p.y);
+	circle.setPosition(_player.p.x-15, _player.p.y-15);
 	circle.setFillColor(sf::Color::Black);
 	window->draw(circle);
 }

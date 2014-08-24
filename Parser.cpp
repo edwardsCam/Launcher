@@ -21,17 +21,17 @@ std::vector<Level> Parser::parseLevels() {
 							Planet thePlanet;
 							line = line.substr(3, line.length() - 2);
 							std::istringstream iss(line);
-							iss >> thePlanet.radius >> thePlanet.xpos >> thePlanet.ypos;
+							iss >> thePlanet.xpos >> thePlanet.ypos >> thePlanet.radius;
 							theLevel.addPlanet(thePlanet);
 						} else if (line[0] == 's') {
-							sf::Vector2i pos;
 							line = line.substr(3, line.length() - 2);
 							std::istringstream iss(line);
 							int angle;
-							iss >> pos.x >> pos.y >> angle;
-							theLevel.setPlayerPos(pos);
-							theLevel.initx = pos.x;
-							theLevel.inity = pos.y;
+							unsigned int xp, yp;
+							iss >> xp >> yp >> angle;
+							theLevel.setPlayerPos(xp, yp);
+							theLevel.initx = xp;
+							theLevel.inity = yp;
 							theLevel.start_angle = angle;
 						}
 						if (line[0] == '-') {

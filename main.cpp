@@ -27,24 +27,12 @@ unsigned int launchCount = 0;
 #define SPRING 0.005
 
 void draw(sf::RenderWindow * window, Level * curr) {
-	window->clear(sf::Color(BG_COLOR));
-	if (IS PAUSED) {
-		sf::Font f;
-		sf::Text t;
-		f.loadFromFile("arial.ttf");
-		t.setFont(f);
-		t.setCharacterSize(40);
-		t.setColor(sf::Color::Red);
-		t.setStyle(sf::Text::Style::Bold);
-		t.setPosition(300, 200);
-		t.setString("PAUSED");
-		window->draw(t);
-	} else if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
+	if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
 		unsigned int a = curr->start_angle;
-		unsigned int x1 = curr->initx+15;
-		unsigned int y1 = curr->inity+15;
+		unsigned int x1 = curr->initx;
+		unsigned int y1 = curr->inity;
 		sf::Vertex v1, v2, v3;
-		v2.position = sf::Vector2f(curr->_player.p.x+15, curr->_player.p.y+15);
+		v2.position = sf::Vector2f(_ball.p.x, _ball.p.y);
 		v1.position = sf::Vector2f(x1 - cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
 		v3.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 + sin(a) * SLINGSHOT_LEN);
 		v1.color = sf::Color::Red;
@@ -57,18 +45,17 @@ void draw(sf::RenderWindow * window, Level * curr) {
 	}
 	curr->drawPlanets(window);
 	curr->drawPlayer(window);
-	window->display();
 }
 
 void check_bounds(Level * curr) {
-	if (curr->_player.p.x < 0)
-		curr->_player.p.x = 0;
-	if (curr->_player.p.y < 0)
-		curr->_player.p.y = 0;
-	if (curr->_player.p.x > 770)
-		curr->_player.p.x = 770;
-	if (curr->_player.p.y > 570)
-		curr->_player.p.y = 570;
+	if (_ball.p.x < 15)
+		_ball.p.x = 15;
+	if (_ball.p.y < 15)
+		_ball.p.y = 15;
+	if (_ball.p.x > 785)
+		_ball.p.x = 785;
+	if (_ball.p.y > 585)
+		_ball.p.y = 585;
 }
 
 void m(Player * p) {
@@ -81,10 +68,10 @@ void m(Player * p) {
 void update(sf::RenderWindow * window, Level* curr) {
 	if (IS DRAGGING) {
 		sf::Vector2i mpos = sf::Mouse::getPosition(*window);
-		curr->setPlayerPos(mpos.x-15, mpos.y-15);
+		curr->setPlayerPos(mpos.x, mpos.y);
 	}
 	else if (IS LAUNCHING) {
-		bool left = curr->_player.p.x < curr->initx;
+		bool left = _ball.p.x < curr->initx;
 		int distx, disty;
 		distx = curr->initx - _ball.p.x;
 		disty = curr->inity - _ball.p.y;
@@ -93,7 +80,7 @@ void update(sf::RenderWindow * window, Level* curr) {
 		ay = (double)disty * SPRING;
 		_ball.a.x = ax;
 		_ball.a.y = ay;
-		m(&curr->_player);
+		m(&_ball);
 		if (left) {
 			if (_ball.p.x >= curr->initx)
 				SET IN_PLAY;
@@ -179,7 +166,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				case (sf::Event::MouseButtonPressed):
 					{
 						if (ISNT PAUSED && ISNT IN_PLAY) {
-							sf::Vector2i playerpos = curr->_player.p;
+							sf::Vector2i playerpos = _ball.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
 								if ((mousepos.x - playerpos.x) < 30 && (mousepos.y - playerpos.y) < 30) {
@@ -201,8 +188,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					//todo: other events
 				} // switch
 			} // event poll
+			if (ISNT PAUSED)
+				window.clear(sf::Color(BG_COLOR));
 			update(&window, curr);
 			draw(&window, curr);
+			theGame.drawText();
+			window.display();
 		} // level loop
 		if (!theGame.nextLevel())
 			window.close();
