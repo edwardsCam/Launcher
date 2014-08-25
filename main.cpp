@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						else if (event.key.code == sf::Keyboard::Space) {
 							if (theGame.isPaused())
 								theGame.resume();
-							else
+							else if (ISNT CRASHED)
 								theGame.pause();
 						}
 						break;

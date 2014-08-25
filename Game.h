@@ -37,6 +37,7 @@ public:
 	bool isPaused();
 	void pause();
 	void resume();
+	void crash();
 	void move();
 	void check_bounds();
 	void update();

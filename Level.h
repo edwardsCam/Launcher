@@ -25,7 +25,6 @@ public:
 
 	unsigned int numPlanets;
 	int initx, inity, releasex, releasey;
-	int start_angle;
 
 	bool released;
 

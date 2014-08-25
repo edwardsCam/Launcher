@@ -51,6 +51,17 @@ void Game::resume() {
 	current_level->_state = current_level->_prevstate;
 }
 
+void Game::crash() {
+	sf::Text t;
+	t.setFont(font);
+	t.setCharacterSize(40);
+	t.setColor(sf::Color::Red);
+	t.setStyle(sf::Text::Style::Bold);
+	t.setPosition(300, 200);
+	t.setString("CRASHED");
+	_window->draw(t);
+}
+
 void Game::draw() {
 	for (unsigned int i = 0; i < current_level->numPlanets; i++)
 		_window->draw(current_level->drawPlanet(i));
@@ -74,13 +85,22 @@ void Game::draw() {
 		_window->draw(t);
 	}
 	if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
-		unsigned int a = current_level->start_angle;
-		unsigned int x1 = current_level->initx;
-		unsigned int y1 = current_level->inity;
+		double a;
+		int x1 = current_level->initx;
+		int y1 = current_level->inity;
+		int x2 = _ball.p.x;
+		int y2 = _ball.p.y;
+		int xdiff = x2 - x1;
+		if (xdiff == 0)
+			a = 0.0;
+		else {
+			int ydiff = y2 - y1;
+			a = atan((double)xdiff/(double)ydiff);
+		}
 		sf::Vertex v1, v2, v3;
+		v1.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
 		v2.position = sf::Vector2f(_ball.p.x, _ball.p.y);
-		v1.position = sf::Vector2f(x1 - cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
-		v3.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 + sin(a) * SLINGSHOT_LEN);
+		v3.position = sf::Vector2f(x1 - cos(a) * SLINGSHOT_LEN, y1 + sin(a) * SLINGSHOT_LEN);
 		v1.color = sf::Color::Red;
 		v2.color = sf::Color::Red;
 		v3.color = sf::Color::Red;
@@ -246,6 +266,6 @@ void Game::update() {
 			}
 		}
 	} else if (IS CRASHED) {
-		pause();
+		crash();
 	}
 }
