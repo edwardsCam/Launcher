@@ -73,7 +73,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					{
 						//todo
 						if (event.key.code == sf::Keyboard::Escape) {
-							SET IN_PLAY;
+							SET LAUNCHING;
 						}
 						else if (event.key.code == sf::Keyboard::Space) {
 							if (theGame.isPaused())

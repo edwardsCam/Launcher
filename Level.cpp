@@ -6,6 +6,7 @@
 
 Level::Level() {
 	active = false;
+	released = false;
 	_state = INITIAL_READY;
 	_prevstate = INITIAL_READY;
 }

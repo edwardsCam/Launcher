@@ -47,6 +47,20 @@ void Game::resume() {
 }
 
 void Game::draw() {
+	if (current_level->released) {
+		sf::CircleShape dot;
+		dot.setPosition(current_level->releasex-dotsize, current_level->releasey-dotsize);
+		dot.setFillColor(sf::Color::Black);
+		dot.setRadius(dotsize);
+		_window->draw(dot);
+		sf::Text t;
+		t.setFont(font);
+		t.setCharacterSize(10);
+		t.setColor(sf::Color::Black);
+		t.setPosition(current_level->releasex+5, current_level->releasey-8);
+		t.setString("(" + std::to_string(current_level->releasex) + ", " + std::to_string(current_level->releasey) + ")");
+		_window->draw(t);
+	}
 	if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
 		unsigned int a = current_level->start_angle;
 		unsigned int x1 = current_level->initx;
@@ -64,6 +78,10 @@ void Game::draw() {
 		_window->draw(line2, 2, sf::Lines);
 	}
 	current_level->drawPlanets(_window);
+	for (int i = 1; i < stream.size(); i++) {
+		sf::Vertex line[2] = {stream[i-1], stream[i]};
+		_window->draw(line, 2, sf::Lines);
+	}
 	current_level->drawPlayer(_window);
 }
 
@@ -92,7 +110,10 @@ void Game::check_bounds() {
 		_ball.p.y = 585;
 }
 
-void m(Player * p) {
+void Game::move() {
+	Player * p = &current_level->_player;
+	unsigned int ix = p->p.x;
+	unsigned int iy = p->p.y;
 	p->v.x += p->a.x;
 	p->v.y += p->a.y;
 	p->speed_bufferx += p->v.x;
@@ -106,6 +127,13 @@ void m(Player * p) {
 		int s = (int)p->speed_buffery;
 		p->p.y += s;
 		p->speed_buffery -= s;
+		
+	}
+	if (ix != p->p.x || iy != p->p.y) {
+		sf::Vertex v;
+		v.position = sf::Vector2f(p->p.x, p->p.y);
+		v.color = sf::Color::Black;
+		stream.push_back(v);
 	}
 }
 
@@ -115,6 +143,15 @@ void Game::update() {
 		current_level->setPlayerPos(mpos.x, mpos.y);
 	}
 	else if (IS LAUNCHING) {
+		if (!current_level->released) {
+			current_level->releasex = _ball.p.x;
+			current_level->releasey = _ball.p.y;
+			current_level->released = true;
+			sf::Vertex v;
+			v.position.x = _ball.p.x;
+			v.position.y = _ball.p.y;
+			stream.push_back(v);
+		}
 		bool left = _ball.p.x < current_level->initx;
 		int distx, disty;
 		distx = current_level->initx - _ball.p.x;
@@ -124,7 +161,7 @@ void Game::update() {
 		ay = (double)disty * SPRING;
 		_ball.a.x = ax;
 		_ball.a.y = ay;
-		m(&_ball);
+		move();
 		if (left) {
 			if (_ball.p.x >= current_level->initx)
 				SET IN_PLAY;
@@ -137,7 +174,7 @@ void Game::update() {
 		sf::Vector2f pull = current_level->getGravitationalPull();
 		_ball.a.x = pull.x;
 		_ball.a.y = pull.y;
-		m(&_ball);
+		move();
 	}
 	check_bounds();
 }
