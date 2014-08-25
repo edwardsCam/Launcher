@@ -85,6 +85,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							curr->reset();
 							view.setSize(WIDTH, HEIGHT);
 							view.setCenter(WIDTH/2, HEIGHT/2);
+							theGame.factor = 1.0;
 							window.setView(view);
 						}
 						break;
@@ -136,9 +137,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				view.setCenter(xc, yc);
 				window.setView(view);
-				theGame.factor = 1.0;
 			}
-			theGame.drawText();
+			if (IS DRAGGING)
+				theGame.drawText();
 			window.display();
 		} // level loop
 		if (!theGame.nextLevel())

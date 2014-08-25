@@ -66,7 +66,7 @@ void Game::drawDot(sf::Color c, float xp, float yp) {
 	_window->draw(dot);
 	sf::Text t;
 	t.setFont(font);
-	t.setCharacterSize(10);
+	t.setCharacterSize((double)(textsize-4) * factor);
 	t.setColor(c);
 	t.setPosition(xp+5, yp-8);
 	t.setString("(" + std::to_string((int)xp) + ", " + std::to_string((int)yp) + ")");
@@ -121,42 +121,15 @@ void Game::draw() {
 	_window->draw(act_lev->drawPlayer());
 }
 
-float max(float a, float b) {
-	if (a >= b)
-		return a;
-	else
-		return b;
-}
-
-float min(float a, float b) {
-	if (a <= b)
-		return a;
-	else
-		return b;
-}
-
 void Game::drawText() {
 	sf::Text t;
 	t.setFont(font);
-	int textScale = (double)textsize * (abs((WIDTH - 2*playersize)-_ball.p.x)) / (WIDTH - 2*playersize);
-	t.setCharacterSize(textScale);
-	t.setColor(sf::Color::Red);
-	t.setPosition(0, 0);
-	float xv = act_lev->_dot.v.x;
-	float yv = act_lev->_dot.v.y;
-	t.setString("Speed: " + std::to_string((int)sqrt(xv*xv + yv*yv)));
+	t.setCharacterSize(textsize-3);
+	t.setColor(sf::Color::Black);
+	sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
+	t.setPosition(mpos.x + playersize, mpos.y - playersize);
+	t.setString("(" + std::to_string(mpos.x) + ", " + std::to_string(mpos.y) + ")");
 	_window->draw(t);
-	if (IS DRAGGING) {
-		sf::Text t;
-		t.setFont(font);
-		int textScale = (double)(textsize-3) * (abs((WIDTH - 2*playersize)-_ball.p.x)) / (WIDTH - 2*playersize);
-		t.setCharacterSize(textScale);
-		t.setColor(sf::Color::Black);
-		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
-		t.setPosition(mpos.x + playersize, mpos.y - playersize);
-		t.setString("(" + std::to_string(mpos.x) + ", " + std::to_string(mpos.y) + ")");
-		_window->draw(t);
-	}
 }
 
 void Game::check_bounds() {
@@ -168,6 +141,13 @@ void Game::check_bounds() {
 		_ball.p.x = WIDTH - playersize;
 	if (_ball.p.y > HEIGHT - playersize)
 		_ball.p.y = HEIGHT - playersize;
+}
+
+float max(float a, float b) {
+	if (a >= b)
+		return a;
+	else
+		return b;
 }
 
 void Game::move() {

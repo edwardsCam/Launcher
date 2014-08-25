@@ -6,8 +6,8 @@
 #include "Level.h"
 #include "Parser.h"
 
-#define WIDTH 700.0
-#define HEIGHT 700.0
+#define WIDTH 800.0
+#define HEIGHT 600.0
 
 #define IS act_lev->_state == 
 #define ISNT act_lev->_state !=
