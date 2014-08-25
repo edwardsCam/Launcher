@@ -23,8 +23,8 @@ public:
 	Player _player;
 
 	unsigned int numPlanets;
-	unsigned int initx, inity, releasex, releasey;
-	unsigned int start_angle;
+	int initx, inity, releasex, releasey;
+	int start_angle;
 
 	bool released;
 
@@ -33,8 +33,8 @@ public:
 	void movePlayer(int x, int y);
 
 	void addPlanet(Planet p);
-	void setPlayerPos(sf::Vector2u pos);
-	void setPlayerPos(unsigned int x, unsigned int y);
+	void setPlayerPos(sf::Vector2i pos);
+	void setPlayerPos(int x, int y);
 
 	Planet * planetAt(int i);
 	sf::Vector2f getGravitationalPull();

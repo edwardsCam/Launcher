@@ -86,10 +86,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				case (sf::Event::MouseButtonPressed):
 					{
 						if (ISNT PAUSED && ISNT IN_PLAY) {
-							sf::Vector2u playerpos = _ball.p;
+							sf::Vector2i playerpos = _ball.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-								if (abs(mousepos.x - (int)playerpos.x) <=15 && abs(mousepos.y - (int)playerpos.y) <= 15) {
+								if (abs(mousepos.x - playerpos.x) <=15 && abs(mousepos.y - playerpos.y) <= 15) {
 									curr->_state = DRAGGING;
 									break;
 								}
@@ -108,11 +108,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					//todo: other events
 				} // switch
 			} // event poll
-			if (ISNT PAUSED)
+			if (ISNT PAUSED) {
 				window.clear(sf::Color(BG_COLOR));
-			theGame.update();
-			theGame.draw();
-			theGame.drawText();
+				theGame.update();
+				theGame.draw();
+				theGame.drawText();
+			}
 			window.display();
 		} // level loop
 		if (!theGame.nextLevel())

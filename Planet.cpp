@@ -4,16 +4,16 @@
 #define min 0.05
 #define max 10
 
-sf::Vector2f Planet::getPull(const sf::Vector2u loc) {
+sf::Vector2f Planet::getPull(const sf::Vector2i loc) {
 
 	double distx = (double)xpos - loc.x;
 	double disty = (double)ypos - loc.y;
 
-	float distance = sqrt(distx * distx + disty * disty);
+	double distance = sqrt(distx * distx + disty * disty);
 	distance *= distance_damp;
 	distance *= distance;
 
-	float pull = radius / distance;
+	double pull = radius / distance;
 	if (pull < min)
 		pull = min;
 	else if (pull > max)

@@ -39,11 +39,11 @@ void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
 }
 
-void Level::setPlayerPos(sf::Vector2u pos) {
+void Level::setPlayerPos(sf::Vector2i pos) {
 	_player.p = pos;
 }
 
-void Level::setPlayerPos(unsigned int x, unsigned int y) {
+void Level::setPlayerPos(int x, int y) {
 	_player.p.x = x;
 	_player.p.y = y;
 }

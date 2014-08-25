@@ -47,6 +47,11 @@ void Game::resume() {
 }
 
 void Game::draw() {
+	current_level->drawPlanets(_window);
+	for (unsigned int i = 1; i < stream.size(); i++) {
+		sf::Vertex line[2] = {stream[i-1], stream[i]};
+		_window->draw(line, 2, sf::Lines);
+	}
 	if (current_level->released) {
 		sf::CircleShape dot;
 		dot.setPosition(current_level->releasex-dotsize, current_level->releasey-dotsize);
@@ -77,11 +82,6 @@ void Game::draw() {
 		_window->draw(line1, 2, sf::Lines);
 		_window->draw(line2, 2, sf::Lines);
 	}
-	current_level->drawPlanets(_window);
-	for (int i = 1; i < stream.size(); i++) {
-		sf::Vertex line[2] = {stream[i-1], stream[i]};
-		_window->draw(line, 2, sf::Lines);
-	}
 	current_level->drawPlayer(_window);
 }
 
@@ -91,11 +91,11 @@ void Game::drawText() {
 	t.setCharacterSize(15);
 	t.setColor(sf::Color::Red);
 	t.setPosition(0, 0);
-	t.setString(std::to_string(sf::Mouse::getPosition(*_window).x) + ", " + std::to_string(sf::Mouse::getPosition(*_window).y));
+	t.setString("(" + std::to_string(sf::Mouse::getPosition(*_window).x) + ", " + std::to_string(sf::Mouse::getPosition(*_window).y) + ")");
 	_window->draw(t);
-	t.setColor(sf::Color::Green);
+	t.setColor(sf::Color::Black);
 	t.setPosition(0, 18);
-	t.setString(std::to_string(current_level->_player.p.x) + ", " + std::to_string(current_level->_player.p.y));
+	t.setString("(" + std::to_string(current_level->_player.p.x) + ", " + std::to_string(current_level->_player.p.y) + ")");
 	_window->draw(t);
 }
 
@@ -176,5 +176,6 @@ void Game::update() {
 		_ball.a.y = pull.y;
 		move();
 	}
-	check_bounds();
+	if (bounds_checking)
+		check_bounds();
 }

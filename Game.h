@@ -13,6 +13,7 @@
 #define SLINGSHOT_LEN 50
 #define SPRING 0.005
 #define dotsize 2
+#define bounds_checking false
 
 class Game {
 public:

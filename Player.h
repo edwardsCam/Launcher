@@ -6,7 +6,7 @@
 class Player {
 public:
 	Player();
-	sf::Vector2u p;
+	sf::Vector2i p;
 	sf::Vector2f v, a;
 	float speed_bufferx, speed_buffery;
 };
