@@ -6,12 +6,11 @@ void Game::init(sf::RenderWindow * window) {
 	_window = window;
 	_levels = Parser::parseLevels();
 	font.loadFromFile("arial.ttf");
-	xmin = 15;
-	ymin = 15;
-	xmax = 800 - 15;
-	ymax = 600 - 15;
-	factorX = 1;
-	factorY = 1;
+	xmin = playersize;
+	ymin = playersize;
+	xmax = 800 - playersize;
+	ymax = 600 - playersize;
+	factor = 1.0;
 	if (_levels.size()) {
 		current_level = &_levels[0];
 		current_level->active = true;
@@ -93,30 +92,46 @@ void Game::draw() {
 	_window->draw(current_level->drawPlayer());
 }
 
+float max(float a, float b) {
+	if (a >= b)
+		return a;
+	else
+		return b;
+}
+
 void Game::drawText() {
 	sf::Text t;
 	t.setFont(font);
-	t.setCharacterSize(15);
+	int textScale = textsize * (double)(xmax - xmin) / 800.0;
+	t.setCharacterSize(textScale);
 	t.setColor(sf::Color::Red);
-	t.setPosition(800 - (xmax - xmin), 600 - (ymax - ymin));
-	sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
-	t.setString("(" + std::to_string(mpos.x) + ", " + std::to_string(mpos.y) + ")");
+	t.setPosition(xmin, ymin);
+	float xv = current_level->_player.v.x;
+	float yv = current_level->_player.v.y;
+	t.setString("Speed: " + std::to_string((int)sqrt(xv*xv + yv*yv)));
 	_window->draw(t);
-	t.setColor(sf::Color::Black);
-	t.setPosition(xmin, ymin + 18);
-	t.setString("(" + std::to_string(current_level->_player.p.x) + ", " + std::to_string(current_level->_player.p.y) + ")");
-	_window->draw(t);
+	if (IS DRAGGING) {
+		sf::Text t;
+		t.setFont(font);
+		int textScale = (textsize-3) * (double)(xmax - xmin) / 800.0;
+		t.setCharacterSize(textScale);
+		t.setColor(sf::Color::Black);
+		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
+		t.setPosition(mpos.x + playersize, mpos.y - playersize);
+		t.setString("(" + std::to_string(mpos.x) + ", " + std::to_string(mpos.y) + ")");
+		_window->draw(t);
+	}
 }
 
 void Game::check_bounds() {
-	if (_ball.p.x < 15)
-		_ball.p.x = 15;
-	if (_ball.p.y < 15)
-		_ball.p.y = 15;
-	if (_ball.p.x > 785)
-		_ball.p.x = 785;
-	if (_ball.p.y > 585)
-		_ball.p.y = 585;
+	if (_ball.p.x < playersize)
+		_ball.p.x = playersize;
+	if (_ball.p.y < playersize)
+		_ball.p.y = playersize;
+	if (_ball.p.x > 800 - playersize)
+		_ball.p.x = 800 - playersize;
+	if (_ball.p.y > 600 - playersize)
+		_ball.p.y = 600 - playersize;
 }
 
 void Game::move() {
@@ -188,28 +203,43 @@ void Game::update() {
 	if (bounds_checking)
 		check_bounds();
 	if (zoom_view) {
+		factor = 1.0;
 		if (_ball.p.x > xmax) {
 			double init = (xmax - xmin);
 			xmax = _ball.p.x;
-			factorX = (double)(xmax - xmin) / init;
+			factor = max(factor, (double)(xmax - xmin) / init);
+
+			double ydiff = ymax - ymin;
+			ymin -= (ydiff * factor - ydiff) / 2;
+			ymax += (ydiff * factor - ydiff) / 2;
 		}
 		else if (_ball.p.x < xmin) {
 			double init = (xmax - xmin);
 			xmin = _ball.p.x;
-			factorX = (double)(xmax - xmin) / init;
-		} else
-			factorX = 1.0;
+			factor = max(factor, (double)(xmax - xmin) / init);
+
+			double ydiff = ymax - ymin;
+			ymin -= (ydiff * factor - ydiff) / 2;
+			ymax += (ydiff * factor - ydiff) / 2;
+		}
 
 		if (_ball.p.y > ymax) {
 			double init = (ymax - ymin);
 			ymax = _ball.p.y;
-			factorY = (double)(ymax - ymin) / init;
+			factor = max(factor, (double)(ymax - ymin) / init);
+
+			double xdiff = xmax - xmin;
+			xmin -= (xdiff * factor - xdiff) / 2;
+			xmax += (xdiff * factor - xdiff) / 2;
 		}
 		else if (_ball.p.y < ymin) {
 			double init = (ymax - ymin);
 			ymin = _ball.p.y;
-			factorY = (double)(ymax - ymin) / init;
+			factor = max(factor, (double)(ymax - ymin) / init);
+
+			double xdiff = xmax - xmin;
+			xmin -= (xdiff * factor - xdiff) / 2;
+			xmax += (xdiff * factor - xdiff) / 2;
 		}
-		else factorY = 1.0;
 	}
 }

@@ -3,6 +3,8 @@
 
 #include "SFML\Graphics.hpp"
 
+#define playersize 15
+
 class Player {
 public:
 	Player();

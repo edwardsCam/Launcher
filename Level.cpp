@@ -21,8 +21,8 @@ sf::CircleShape Level::drawPlanet(unsigned int i) {
 }
 
 sf::CircleShape Level::drawPlayer() {
-	sf::CircleShape circle(15);
-	circle.setPosition((float)_player.p.x-15, (float)_player.p.y-15);
+	sf::CircleShape circle(playersize);
+	circle.setPosition((float)_player.p.x-playersize, (float)_player.p.y-playersize);
 	circle.setFillColor(sf::Color::Black);
 	return circle;
 }

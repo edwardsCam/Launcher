@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							sf::Vector2i playerpos = _ball.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-								if (abs(mousepos.x - playerpos.x) <=15 && abs(mousepos.y - playerpos.y) <= 15) {
+								if (abs(mousepos.x - playerpos.x) <= playersize && abs(mousepos.y - playerpos.y) <= playersize) {
 									curr->_state = DRAGGING;
 									break;
 								}
@@ -115,11 +115,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				theGame.update();
 				theGame.draw();
 			}
-			if (zoom_view) {
-				float the_max = max(theGame.factorX,theGame.factorY);
-				view.zoom(the_max);
-				theGame.factorX = 1;
-				theGame.factorY = 1;
+			if (zoom_view && theGame.factor > 1) {
+				view.zoom(theGame.factor);
+				view.setCenter((theGame.xmax + theGame.xmin)/2, (theGame.ymax + theGame.ymin)/2);
 				window.setView(view);
 			}
 			theGame.drawText();

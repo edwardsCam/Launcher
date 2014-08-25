@@ -13,6 +13,7 @@
 #define SLINGSHOT_LEN 50
 #define SPRING 0.005
 #define dotsize 2
+#define textsize 15
 #define bounds_checking false
 #define zoom_view true
 
@@ -25,7 +26,7 @@ public:
 	sf::Font font;
 
 	int xmin, ymin, xmax, ymax;
-	float factorX, factorY;
+	float factor;
 
 	std::vector<sf::Vertex> stream;
 

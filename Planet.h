@@ -6,8 +6,7 @@
 class Planet {
 public:
 	float radius;
-	unsigned int xpos;
-	unsigned int ypos;
+	int xpos, ypos;
 	sf::Vector2f getPull(const sf::Vector2i loc);
 };
 
