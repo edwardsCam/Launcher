@@ -5,6 +5,7 @@
 #define color _colors[i]
 
 Level::Level() {
+	Goal g();
 	active = false;
 	released = false;
 	_state = INITIAL_READY;

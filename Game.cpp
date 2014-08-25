@@ -58,6 +58,17 @@ void Game::crash() {
 	_window->draw(t);
 }
 
+void Game::win() {
+	sf::Text t;
+	t.setFont(font);
+	t.setCharacterSize(40);
+	t.setColor(sf::Color::Red);
+	t.setStyle(sf::Text::Style::Bold);
+	t.setPosition(300, 200);
+	t.setString("WON");
+	_window->draw(t);
+}
+
 void Game::drawDot(sf::Color c, float xp, float yp) {
 	sf::CircleShape dot;
 	dot.setPosition(xp - dotsize, yp - dotsize);
@@ -76,6 +87,8 @@ void Game::drawDot(sf::Color c, float xp, float yp) {
 void Game::draw() {
 	for (unsigned int i = 0; i < act_lev->nPlanets; i++)
 		_window->draw(act_lev->drawPlanet(i));
+
+	_window->draw(act_lev->goal.handle());
 
 	for (unsigned int i = 1; i < active_level pstream.size(); i++) {
 		if (i == 1)
@@ -237,11 +250,18 @@ void Game::update() {
 		_ball.a.x = pull.x;
 		_ball.a.y = pull.y;
 		move();
+		if (active_level goal.isTouching(&_ball)) {
+			SET WON;
+			return;
+		}
 		if (crashing && act_lev->isCrashed()) {
 			SET CRASHED;
 			return;
 		}
 	} else if (IS CRASHED) {
 		crash();
+	}
+	else if (IS WON) {
+		win();
 	}
 }

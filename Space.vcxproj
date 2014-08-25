@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Planet.h" />

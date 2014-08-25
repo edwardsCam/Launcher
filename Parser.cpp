@@ -32,6 +32,11 @@ std::vector<Level> Parser::parseLevels() {
 							theLevel.x_i = xp;
 							theLevel.y_i = yp;
 						}
+						else if (line[0] == 'g') {
+							line = line.substr(3, line.length() - 2);
+							std::istringstream iss(line);
+							iss >> theLevel.goal.pos.x >> theLevel.goal.pos.y;
+						}
 						if (line[0] == '-') {
 							parsing_level = false;
 							continue;

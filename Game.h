@@ -6,7 +6,7 @@
 #include "Level.h"
 #include "Parser.h"
 
-#define WIDTH 800.0
+#define WIDTH 1000.0
 #define HEIGHT 600.0
 
 #define IS act_lev->_state == 
@@ -37,6 +37,7 @@ public:
 	bool isPaused();
 	void pause(), resume();
 	void crash();
+	void win();
 	void move();
 	void check_bounds();
 	void update();

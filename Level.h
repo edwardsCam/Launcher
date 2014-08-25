@@ -4,6 +4,7 @@
 #include <vector>
 #include "Planet.h"
 #include "Player.h"
+#include "Goal.h"
 
 enum gamestate {
 	PAUSED = 0,
@@ -11,7 +12,8 @@ enum gamestate {
 	DRAGGING  = INITIAL_READY + 1,
 	LAUNCHING = INITIAL_READY + 2,
 	IN_PLAY   = INITIAL_READY + 3,
-	CRASHED   = INITIAL_READY + 4
+	CRASHED   = INITIAL_READY + 4,
+	WON       = INITIAL_READY + 5
 };
 
 class Level {
@@ -22,6 +24,7 @@ public:
 	unsigned int id;
 	bool active, released;
 	Player _dot;
+	Goal goal;
 	gamestate _state, _pstate;
 	unsigned int nPlanets;
 	int x_i, y_i, x_r, y_r;

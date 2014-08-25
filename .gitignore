@@ -32,8 +32,8 @@ Debug/*.ilk
 Debug/*.idb
 Debug/*.pdb
 
-# Git
-.gitignore
-
 levels.txt
 colors.txt
+
+# Git
+.gitignore
