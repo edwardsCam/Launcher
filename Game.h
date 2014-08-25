@@ -16,6 +16,7 @@
 #define textsize 15
 #define bounds_checking false
 #define zoom_view true
+#define crashing true
 
 class Game {
 public:

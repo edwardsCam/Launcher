@@ -60,3 +60,13 @@ sf::Vector2f Level::getGravitationalPull() {
 	}
 	return sf::Vector2f(sumx, sumy);
 }
+
+bool Level::isCrashed() {
+	for (unsigned int i = 0; i < _planets.size(); i++) {
+		double xd = _player.p.x - _planets[i].xpos;
+		double yd = _player.p.y - _planets[i].ypos;
+		if (sqrt(xd*xd + yd*yd) < _planets[i].radius)
+			return true;
+	}
+	return false;
+}

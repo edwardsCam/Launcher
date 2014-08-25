@@ -12,6 +12,7 @@
 #include "Planet.h"
 
 #define _debug false
+#define pause_on_lose_focus false
 
 // Globals
 
@@ -56,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::LostFocus):
 					{
-						if (!_debug)
+						if (!_debug && pause_on_lose_focus)
 							theGame.pause();
 						break;
 					}

@@ -151,7 +151,6 @@ void Game::move() {
 		int s = (int)p->speed_buffery;
 		p->p.y += s;
 		p->speed_buffery -= s;
-		
 	}
 	if (ix != p->p.x || iy != p->p.y) {
 		sf::Vertex v;
@@ -165,6 +164,7 @@ void Game::update() {
 	if (IS DRAGGING) {
 		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
 		current_level->setPlayerPos(mpos.x, mpos.y);
+		return;
 	}
 	else if (IS LAUNCHING) {
 		if (!current_level->released) {
@@ -199,47 +199,53 @@ void Game::update() {
 		_ball.a.x = pull.x;
 		_ball.a.y = pull.y;
 		move();
-	}
-	if (bounds_checking)
-		check_bounds();
-	if (zoom_view) {
-		factor = 1.0;
-		if (_ball.p.x > xmax) {
-			double init = (xmax - xmin);
-			xmax = _ball.p.x;
-			factor = max(factor, (double)(xmax - xmin) / init);
-
-			double ydiff = ymax - ymin;
-			ymin -= (ydiff * factor - ydiff) / 2;
-			ymax += (ydiff * factor - ydiff) / 2;
+		if (crashing && current_level->isCrashed()) {
+			SET CRASHED;
+			return;
 		}
-		else if (_ball.p.x < xmin) {
-			double init = (xmax - xmin);
-			xmin = _ball.p.x;
-			factor = max(factor, (double)(xmax - xmin) / init);
+		if (bounds_checking)
+			check_bounds();
+		if (zoom_view) {
+			factor = 1.0;
+			if (_ball.p.x > xmax) {
+				double init = (xmax - xmin);
+				xmax = _ball.p.x;
+				factor = max(factor, (double)(xmax - xmin) / init);
 
-			double ydiff = ymax - ymin;
-			ymin -= (ydiff * factor - ydiff) / 2;
-			ymax += (ydiff * factor - ydiff) / 2;
+				double ydiff = ymax - ymin;
+				ymin -= (ydiff * factor - ydiff) / 2;
+				ymax += (ydiff * factor - ydiff) / 2;
+			}
+			else if (_ball.p.x < xmin) {
+				double init = (xmax - xmin);
+				xmin = _ball.p.x;
+				factor = max(factor, (double)(xmax - xmin) / init);
+
+				double ydiff = ymax - ymin;
+				ymin -= (ydiff * factor - ydiff) / 2;
+				ymax += (ydiff * factor - ydiff) / 2;
+			}
+
+			if (_ball.p.y > ymax) {
+				double init = (ymax - ymin);
+				ymax = _ball.p.y;
+				factor = max(factor, (double)(ymax - ymin) / init);
+
+				double xdiff = xmax - xmin;
+				xmin -= (xdiff * factor - xdiff) / 2;
+				xmax += (xdiff * factor - xdiff) / 2;
+			}
+			else if (_ball.p.y < ymin) {
+				double init = (ymax - ymin);
+				ymin = _ball.p.y;
+				factor = max(factor, (double)(ymax - ymin) / init);
+
+				double xdiff = xmax - xmin;
+				xmin -= (xdiff * factor - xdiff) / 2;
+				xmax += (xdiff * factor - xdiff) / 2;
+			}
 		}
-
-		if (_ball.p.y > ymax) {
-			double init = (ymax - ymin);
-			ymax = _ball.p.y;
-			factor = max(factor, (double)(ymax - ymin) / init);
-
-			double xdiff = xmax - xmin;
-			xmin -= (xdiff * factor - xdiff) / 2;
-			xmax += (xdiff * factor - xdiff) / 2;
-		}
-		else if (_ball.p.y < ymin) {
-			double init = (ymax - ymin);
-			ymin = _ball.p.y;
-			factor = max(factor, (double)(ymax - ymin) / init);
-
-			double xdiff = xmax - xmin;
-			xmin -= (xdiff * factor - xdiff) / 2;
-			xmax += (xdiff * factor - xdiff) / 2;
-		}
+	} else if (IS CRASHED) {
+		pause();
 	}
 }

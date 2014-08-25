@@ -11,6 +11,7 @@ enum gamestate {
 	DRAGGING  = INITIAL_READY + 1,
 	LAUNCHING = INITIAL_READY + 2,
 	IN_PLAY   = INITIAL_READY + 3,
+	CRASHED   = INITIAL_READY + 4
 };
 
 class Level {
@@ -35,6 +36,8 @@ public:
 	void addPlanet(Planet p);
 	void setPlayerPos(sf::Vector2i pos);
 	void setPlayerPos(int x, int y);
+
+	bool isCrashed();
 
 	Planet * planetAt(int i);
 	sf::Vector2f getGravitationalPull();
