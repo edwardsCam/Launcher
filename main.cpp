@@ -74,8 +74,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::KeyPressed):
 					{
-						//todo
-						if (event.key.code == sf::Keyboard::Escape) {
+						if (event.key.code == sf::Keyboard::Return) {
 							SET LAUNCHING;
 						}
 						else if (event.key.code == sf::Keyboard::Space) {
@@ -83,6 +82,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 								theGame.resume();
 							else if (ISNT CRASHED)
 								theGame.pause();
+						}
+						else if (event.key.code == sf::Keyboard::Escape) {
+							curr->reset();
+							theGame.resetBounds();
+							view.setSize(800, 600);
+							view.setCenter(400, 300);
+							window.setView(view);
 						}
 						break;
 					}

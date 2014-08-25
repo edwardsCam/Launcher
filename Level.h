@@ -28,9 +28,13 @@ public:
 
 	bool released;
 
+	std::vector<sf::Vertex> stream;
+
 	sf::CircleShape drawPlanet(unsigned int i);
 	sf::CircleShape drawPlayer();
 	void movePlayer(int x, int y);
+
+	void reset();
 
 	void addPlanet(Planet p);
 	void setPlayerPos(sf::Vector2i pos);

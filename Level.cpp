@@ -32,6 +32,22 @@ void Level::movePlayer(int x, int y) {
 	_player.p.y += y;
 }
 
+void Level::reset() {
+	active = true;
+	released = false;
+	_state = INITIAL_READY;
+	_prevstate = INITIAL_READY;
+	_player.a.x = 0;
+	_player.a.y = 0;
+	_player.v.x = 0;
+	_player.v.y = 0;
+	_player.p.x = initx;
+	_player.p.y = inity;
+	releasex = initx;
+	releasey = inity;
+	stream.clear();
+}
+
 void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
 	numPlanets = _planets.size();

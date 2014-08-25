@@ -62,12 +62,19 @@ void Game::crash() {
 	_window->draw(t);
 }
 
+void Game::resetBounds() {
+	xmin = playersize;
+	ymin = playersize;
+	xmax = 800.0 - playersize;
+	ymax = 600.0 - playersize;
+}
+
 void Game::draw() {
 	for (unsigned int i = 0; i < current_level->numPlanets; i++)
 		_window->draw(current_level->drawPlanet(i));
 
-	for (unsigned int i = 1; i < stream.size(); i++) {
-		sf::Vertex line[2] = {stream[i-1], stream[i]};
+	for (unsigned int i = 1; i < active_level stream.size(); i++) {
+		sf::Vertex line[2] = {active_level stream[i-1], active_level stream[i]};
 		_window->draw(line, 2, sf::Lines);
 	}
 	if (current_level->released) {
@@ -122,7 +129,7 @@ float max(float a, float b) {
 void Game::drawText() {
 	sf::Text t;
 	t.setFont(font);
-	int textScale = textsize * (double)(xmax - xmin) / 800.0;
+	int textScale = textsize * (double)(xmax - xmin) / (800.0 - playersize);
 	t.setCharacterSize(textScale);
 	t.setColor(sf::Color::Red);
 	t.setPosition(xmin, ymin);
@@ -133,7 +140,7 @@ void Game::drawText() {
 	if (IS DRAGGING) {
 		sf::Text t;
 		t.setFont(font);
-		int textScale = (textsize-3) * (double)(xmax - xmin) / 800.0;
+		int textScale = (textsize-3) * (double)(xmax - xmin) / (800.0 - playersize);
 		t.setCharacterSize(textScale);
 		t.setColor(sf::Color::Black);
 		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
@@ -176,7 +183,7 @@ void Game::move() {
 		sf::Vertex v;
 		v.position = sf::Vector2f(p->p.x, p->p.y);
 		v.color = sf::Color::Black;
-		stream.push_back(v);
+		active_level stream.push_back(v);
 	}
 }
 
@@ -194,7 +201,7 @@ void Game::update() {
 			sf::Vertex v;
 			v.position.x = _ball.p.x;
 			v.position.y = _ball.p.y;
-			stream.push_back(v);
+			active_level stream.push_back(v);
 		}
 		bool left = _ball.p.x < current_level->initx;
 		int distx, disty;

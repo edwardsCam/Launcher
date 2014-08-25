@@ -34,3 +34,6 @@ Debug/*.pdb
 
 # Git
 .gitignore
+
+levels.txt
+colors.txt

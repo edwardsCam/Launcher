@@ -5,7 +5,7 @@
 #  p: planet.radius planet.x planet.y
 
 +
-s: 300 250 20
+s: 300 250
 p: 400 500 30
 p: 100 100 80
 p: 800 200 130

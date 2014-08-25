@@ -10,6 +10,7 @@
 #define ISNT current_level->_state !=
 #define SET current_level->_state =
 #define _ball current_level->_player
+#define active_level current_level->
 #define SLINGSHOT_LEN 50
 #define SPRING 0.005
 #define dotsize 2
@@ -29,8 +30,6 @@ public:
 	int xmin, ymin, xmax, ymax;
 	float factor;
 
-	std::vector<sf::Vertex> stream;
-
 	Level * current_level;
 	bool nextLevel();
 
@@ -38,6 +37,7 @@ public:
 	void pause();
 	void resume();
 	void crash();
+	void resetBounds();
 	void move();
 	void check_bounds();
 	void update();
