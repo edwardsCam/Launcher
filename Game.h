@@ -38,6 +38,7 @@ public:
 	void resume();
 	void crash();
 	void resetBounds();
+	void drawDot(sf::Color c, float xp, float yp);
 	void move();
 	void check_bounds();
 	void update();

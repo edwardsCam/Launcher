@@ -1,8 +1,8 @@
 #include "Player.h"
 
 Player::Player() {
-	speed_bufferx = 0;
-	speed_buffery = 0;
+	x_speed_buff = 0;
+	y_speed_buff = 0;
 	v.x = 0;
 	v.y = 0;
 	a.x = 0;

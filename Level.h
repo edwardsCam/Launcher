@@ -28,6 +28,7 @@ public:
 
 	bool released;
 
+	std::vector<sf::Vertex> prevstream;
 	std::vector<sf::Vertex> stream;
 
 	sf::CircleShape drawPlanet(unsigned int i);

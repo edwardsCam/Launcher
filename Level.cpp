@@ -45,6 +45,7 @@ void Level::reset() {
 	_player.p.y = inity;
 	releasex = initx;
 	releasey = inity;
+	prevstream = stream;
 	stream.clear();
 }
 

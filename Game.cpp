@@ -69,28 +69,41 @@ void Game::resetBounds() {
 	ymax = 600.0 - playersize;
 }
 
+void Game::drawDot(sf::Color c, float xp, float yp) {
+	sf::CircleShape dot;
+	dot.setPosition(xp - dotsize, yp - dotsize);
+	dot.setFillColor(c);
+	dot.setRadius(dotsize);
+	_window->draw(dot);
+	sf::Text t;
+	t.setFont(font);
+	t.setCharacterSize(10);
+	t.setColor(c);
+	t.setPosition(xp+5, yp-8);
+	t.setString("(" + std::to_string((int)xp) + ", " + std::to_string((int)yp) + ")");
+	_window->draw(t);
+}
+
 void Game::draw() {
 	for (unsigned int i = 0; i < current_level->numPlanets; i++)
 		_window->draw(current_level->drawPlanet(i));
 
+	for (unsigned int i = 1; i < active_level prevstream.size(); i++) {
+		if (i == 1)
+			drawDot(sf::Color::White, active_level prevstream[0].position.x, active_level prevstream[0].position.y);
+		sf::Vertex line2[2] = {active_level prevstream[i-1], active_level prevstream[i]};
+		line2[0].color = sf::Color::White;
+		line2[1].color = sf::Color::White;
+		_window->draw(line2, 2, sf::Lines);
+	}
+
 	for (unsigned int i = 1; i < active_level stream.size(); i++) {
-		sf::Vertex line[2] = {active_level stream[i-1], active_level stream[i]};
-		_window->draw(line, 2, sf::Lines);
+		sf::Vertex line1[2] = {active_level stream[i-1], active_level stream[i]};
+		_window->draw(line1, 2, sf::Lines);
 	}
-	if (current_level->released) {
-		sf::CircleShape dot;
-		dot.setPosition(current_level->releasex-dotsize, current_level->releasey-dotsize);
-		dot.setFillColor(sf::Color::Black);
-		dot.setRadius(dotsize);
-		_window->draw(dot);
-		sf::Text t;
-		t.setFont(font);
-		t.setCharacterSize(10);
-		t.setColor(sf::Color::Black);
-		t.setPosition(current_level->releasex+5, current_level->releasey-8);
-		t.setString("(" + std::to_string(current_level->releasex) + ", " + std::to_string(current_level->releasey) + ")");
-		_window->draw(t);
-	}
+	if (current_level->released)
+		drawDot(sf::Color::Black, current_level->releasex, current_level->releasey);
+
 	if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
 		double a;
 		int x1 = current_level->initx;
@@ -102,7 +115,7 @@ void Game::draw() {
 			a = 0.0;
 		else {
 			int ydiff = y2 - y1;
-			a = atan((double)xdiff/(double)ydiff);
+			a = atan((double)xdiff/ydiff);
 		}
 		sf::Vertex v1, v2, v3;
 		v1.position = sf::Vector2f(x1 + cos(a) * SLINGSHOT_LEN, y1 - sin(a) * SLINGSHOT_LEN);
@@ -167,17 +180,17 @@ void Game::move() {
 	unsigned int iy = p->p.y;
 	p->v.x += p->a.x;
 	p->v.y += p->a.y;
-	p->speed_bufferx += p->v.x;
-	p->speed_buffery += p->v.y;
-	if (p->speed_bufferx >= 1 || p->speed_bufferx <= -1) {
-		int s = (int)p->speed_bufferx;
+	p->x_speed_buff += p->v.x;
+	p->y_speed_buff += p->v.y;
+	if (p->x_speed_buff >= 1 || p->x_speed_buff <= -1) {
+		int s = (int)p->x_speed_buff;
 		p->p.x += s;
-		p->speed_bufferx -= s;
+		p->x_speed_buff -= s;
 	}
-	if (p->speed_buffery >= 1 || p->speed_buffery <= -1) {
-		int s = (int)p->speed_buffery;
+	if (p->y_speed_buff >= 1 || p->y_speed_buff <= -1) {
+		int s = (int)p->y_speed_buff;
 		p->p.y += s;
-		p->speed_buffery -= s;
+		p->y_speed_buff -= s;
 	}
 	if (ix != p->p.x || iy != p->p.y) {
 		sf::Vertex v;
