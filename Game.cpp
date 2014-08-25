@@ -4,8 +4,14 @@ const std::vector<sf::Color> Game::_colors = Parser::parseColors();
 
 void Game::init(sf::RenderWindow * window) {
 	_window = window;
+	_levels = Parser::parseLevels();
 	font.loadFromFile("arial.ttf");
-	_levels = Parser::parseLevels();	
+	xmin = 15;
+	ymin = 15;
+	xmax = 800 - 15;
+	ymax = 600 - 15;
+	factorX = 1;
+	factorY = 1;
 	if (_levels.size()) {
 		current_level = &_levels[0];
 		current_level->active = true;
@@ -47,7 +53,9 @@ void Game::resume() {
 }
 
 void Game::draw() {
-	current_level->drawPlanets(_window);
+	for (unsigned int i = 0; i < current_level->numPlanets; i++)
+		_window->draw(current_level->drawPlanet(i));
+
 	for (unsigned int i = 1; i < stream.size(); i++) {
 		sf::Vertex line[2] = {stream[i-1], stream[i]};
 		_window->draw(line, 2, sf::Lines);
@@ -82,7 +90,7 @@ void Game::draw() {
 		_window->draw(line1, 2, sf::Lines);
 		_window->draw(line2, 2, sf::Lines);
 	}
-	current_level->drawPlayer(_window);
+	_window->draw(current_level->drawPlayer());
 }
 
 void Game::drawText() {
@@ -90,11 +98,12 @@ void Game::drawText() {
 	t.setFont(font);
 	t.setCharacterSize(15);
 	t.setColor(sf::Color::Red);
-	t.setPosition(0, 0);
-	t.setString("(" + std::to_string(sf::Mouse::getPosition(*_window).x) + ", " + std::to_string(sf::Mouse::getPosition(*_window).y) + ")");
+	t.setPosition(800 - (xmax - xmin), 600 - (ymax - ymin));
+	sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
+	t.setString("(" + std::to_string(mpos.x) + ", " + std::to_string(mpos.y) + ")");
 	_window->draw(t);
 	t.setColor(sf::Color::Black);
-	t.setPosition(0, 18);
+	t.setPosition(xmin, ymin + 18);
 	t.setString("(" + std::to_string(current_level->_player.p.x) + ", " + std::to_string(current_level->_player.p.y) + ")");
 	_window->draw(t);
 }
@@ -178,4 +187,29 @@ void Game::update() {
 	}
 	if (bounds_checking)
 		check_bounds();
+	if (zoom_view) {
+		if (_ball.p.x > xmax) {
+			double init = (xmax - xmin);
+			xmax = _ball.p.x;
+			factorX = (double)(xmax - xmin) / init;
+		}
+		else if (_ball.p.x < xmin) {
+			double init = (xmax - xmin);
+			xmin = _ball.p.x;
+			factorX = (double)(xmax - xmin) / init;
+		} else
+			factorX = 1.0;
+
+		if (_ball.p.y > ymax) {
+			double init = (ymax - ymin);
+			ymax = _ball.p.y;
+			factorY = (double)(ymax - ymin) / init;
+		}
+		else if (_ball.p.y < ymin) {
+			double init = (ymax - ymin);
+			ymin = _ball.p.y;
+			factorY = (double)(ymax - ymin) / init;
+		}
+		else factorY = 1.0;
+	}
 }

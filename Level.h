@@ -28,8 +28,8 @@ public:
 
 	bool released;
 
-	void drawPlanets(sf::RenderWindow * window);
-	void drawPlayer(sf::RenderWindow * window);
+	sf::CircleShape drawPlanet(unsigned int i);
+	sf::CircleShape drawPlayer();
 	void movePlayer(int x, int y);
 
 	void addPlanet(Planet p);

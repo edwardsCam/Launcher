@@ -14,6 +14,7 @@
 #define SPRING 0.005
 #define dotsize 2
 #define bounds_checking false
+#define zoom_view true
 
 class Game {
 public:
@@ -22,6 +23,9 @@ public:
 	void init(sf::RenderWindow * window);
 	sf::RenderWindow * _window;
 	sf::Font font;
+
+	int xmin, ymin, xmax, ymax;
+	float factorX, factorY;
 
 	std::vector<sf::Vertex> stream;
 

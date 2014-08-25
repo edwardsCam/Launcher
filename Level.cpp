@@ -11,23 +11,20 @@ Level::Level() {
 	_prevstate = INITIAL_READY;
 }
 
-void Level::drawPlanets(sf::RenderWindow * window) {
-	numPlanets = _planets.size();
-	for (unsigned int i = 0; i < numPlanets; i++) {
-		Planet thePlanet = _planets[i];
-		float r = thePlanet.radius;
-		sf::CircleShape circle(r);
-		circle.setPosition(thePlanet.xpos-r, thePlanet.ypos-r);
-		circle.setFillColor(sf::Color(Game::color));
-		window->draw(circle);
-	}
+sf::CircleShape Level::drawPlanet(unsigned int i) {
+	Planet thePlanet = _planets[i];
+	float r = thePlanet.radius;
+	sf::CircleShape circle(r);
+	circle.setPosition(thePlanet.xpos-r, thePlanet.ypos-r);
+	circle.setFillColor(sf::Color(Game::color));
+	return circle;
 }
 
-void Level::drawPlayer(sf::RenderWindow * window) {
+sf::CircleShape Level::drawPlayer() {
 	sf::CircleShape circle(15);
 	circle.setPosition((float)_player.p.x-15, (float)_player.p.y-15);
 	circle.setFillColor(sf::Color::Black);
-	window->draw(circle);
+	return circle;
 }
 
 void Level::movePlayer(int x, int y) {
@@ -37,6 +34,7 @@ void Level::movePlayer(int x, int y) {
 
 void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
+	numPlanets = _planets.size();
 }
 
 void Level::setPlayerPos(sf::Vector2i pos) {

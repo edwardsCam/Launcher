@@ -17,8 +17,8 @@
 
 // Definitions
 #define MAX_FRAMERATE 32
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 800.0
+#define HEIGHT 600.0
 #define BG_COLOR 175,220,220
 #define _ball curr->_player
 #define IS curr->_state == 
@@ -32,6 +32,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	window.setFramerateLimit(MAX_FRAMERATE);
 	window.setKeyRepeatEnabled(false);
 	window.clear(sf::Color(BG_COLOR));
+
+	sf::View view(window.getDefaultView());
 
 	Game theGame;
 	theGame.init(&window);
@@ -112,8 +114,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				window.clear(sf::Color(BG_COLOR));
 				theGame.update();
 				theGame.draw();
-				theGame.drawText();
 			}
+			if (zoom_view) {
+				float the_max = max(theGame.factorX,theGame.factorY);
+				view.zoom(the_max);
+				theGame.factorX = 1;
+				theGame.factorY = 1;
+				window.setView(view);
+			}
+			theGame.drawText();
 			window.display();
 		} // level loop
 		if (!theGame.nextLevel())
