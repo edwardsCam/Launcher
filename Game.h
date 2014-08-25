@@ -5,6 +5,13 @@
 #include "Level.h"
 #include "Parser.h"
 
+#define IS current_level->_state == 
+#define ISNT current_level->_state !=
+#define SET current_level->_state =
+#define _ball current_level->_player
+#define SLINGSHOT_LEN 50
+#define SPRING 0.005
+
 class Game {
 public:
 
@@ -19,6 +26,9 @@ public:
 	bool isPaused();
 	void pause();
 	void resume();
+	void check_bounds();
+	void update();
+	void draw();
 	void drawText();
 
 private:
