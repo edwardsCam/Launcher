@@ -8,7 +8,7 @@ Level::Level() {
 	active = false;
 	released = false;
 	_state = INITIAL_READY;
-	_prevstate = INITIAL_READY;
+	_pstate = INITIAL_READY;
 }
 
 sf::CircleShape Level::drawPlanet(unsigned int i) {
@@ -22,45 +22,40 @@ sf::CircleShape Level::drawPlanet(unsigned int i) {
 
 sf::CircleShape Level::drawPlayer() {
 	sf::CircleShape circle(playersize);
-	circle.setPosition((float)_player.p.x-playersize, (float)_player.p.y-playersize);
+	circle.setPosition((float)_dot.p.x-playersize, (float)_dot.p.y-playersize);
 	circle.setFillColor(sf::Color::Black);
 	return circle;
-}
-
-void Level::movePlayer(int x, int y) {
-	_player.p.x += x;
-	_player.p.y += y;
 }
 
 void Level::reset() {
 	active = true;
 	released = false;
 	_state = INITIAL_READY;
-	_prevstate = INITIAL_READY;
-	_player.a.x = 0;
-	_player.a.y = 0;
-	_player.v.x = 0;
-	_player.v.y = 0;
-	_player.p.x = initx;
-	_player.p.y = inity;
-	releasex = initx;
-	releasey = inity;
-	prevstream = stream;
+	_pstate = INITIAL_READY;
+	_dot.a.x = 0;
+	_dot.a.y = 0;
+	_dot.v.x = 0;
+	_dot.v.y = 0;
+	_dot.p.x = x_i;
+	_dot.p.y = y_i;
+	x_r = x_i;
+	y_r = y_i;
+	pstream = stream;
 	stream.clear();
 }
 
 void Level::addPlanet(Planet p) {
 	_planets.push_back(p);
-	numPlanets = _planets.size();
+	nPlanets = _planets.size();
 }
 
 void Level::setPlayerPos(sf::Vector2i pos) {
-	_player.p = pos;
+	_dot.p = pos;
 }
 
 void Level::setPlayerPos(int x, int y) {
-	_player.p.x = x;
-	_player.p.y = y;
+	_dot.p.x = x;
+	_dot.p.y = y;
 }
 
 Planet * Level::planetAt(int i) {
@@ -70,8 +65,8 @@ Planet * Level::planetAt(int i) {
 sf::Vector2f Level::getGravitationalPull() {
 	float sumx = 0;
 	float sumy = 0;
-	for (unsigned int i = 0; i < numPlanets; i++) {
-		sf::Vector2f a = (&_planets[i])->getPull(_player.p);
+	for (unsigned int i = 0; i < nPlanets; i++) {
+		sf::Vector2f a = (&_planets[i])->getPull(_dot.p);
 		sumx += a.x;
 		sumy += a.y;
 	}
@@ -80,8 +75,8 @@ sf::Vector2f Level::getGravitationalPull() {
 
 bool Level::isCrashed() {
 	for (unsigned int i = 0; i < _planets.size(); i++) {
-		double xd = _player.p.x - _planets[i].xpos;
-		double yd = _player.p.y - _planets[i].ypos;
+		double xd = _dot.p.x - _planets[i].xpos;
+		double yd = _dot.p.y - _planets[i].ypos;
 		if (sqrt(xd*xd + yd*yd) < _planets[i].radius)
 			return true;
 	}

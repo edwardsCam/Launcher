@@ -21,7 +21,7 @@
 #define WIDTH 800.0
 #define HEIGHT 600.0
 #define BG_COLOR 175,220,220
-#define _ball curr->_player
+#define _ball curr->_dot
 #define IS curr->_state == 
 #define ISNT curr->_state !=
 #define SET curr->_state =
@@ -42,7 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//game loop
 	while (window.isOpen())
 	{
-		Level * curr = theGame.current_level;
+		Level * curr = theGame.act_lev;
 		while (curr && curr->active)
 		{
 			sf::Event event;

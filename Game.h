@@ -6,11 +6,11 @@
 #include "Level.h"
 #include "Parser.h"
 
-#define IS current_level->_state == 
-#define ISNT current_level->_state !=
-#define SET current_level->_state =
-#define _ball current_level->_player
-#define active_level current_level->
+#define IS act_lev->_state == 
+#define ISNT act_lev->_state !=
+#define SET act_lev->_state =
+#define _ball act_lev->_dot
+#define active_level act_lev->
 #define SLINGSHOT_LEN 50
 #define SPRING 0.005
 #define dotsize 2
@@ -22,7 +22,6 @@
 class Game {
 public:
 
-	static const std::vector<sf::Color> _colors;
 	void init(sf::RenderWindow * window);
 	sf::RenderWindow * _window;
 	sf::Font font;
@@ -30,20 +29,20 @@ public:
 	int xmin, ymin, xmax, ymax;
 	float factor;
 
-	Level * current_level;
+	Level * act_lev;
 	bool nextLevel();
 
 	bool isPaused();
-	void pause();
-	void resume();
+	void pause(), resume();
 	void crash();
 	void resetBounds();
-	void drawDot(sf::Color c, float xp, float yp);
 	void move();
 	void check_bounds();
 	void update();
-	void draw();
-	void drawText();
+	void draw(), drawText();
+	void drawDot(sf::Color c, float xp, float yp);
+
+	static const std::vector<sf::Color> _colors;
 
 private:
 	std::vector<Level> _levels;

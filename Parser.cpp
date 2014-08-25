@@ -29,8 +29,8 @@ std::vector<Level> Parser::parseLevels() {
 							unsigned int xp, yp;
 							iss >> xp >> yp;
 							theLevel.setPlayerPos(xp, yp);
-							theLevel.initx = xp;
-							theLevel.inity = yp;
+							theLevel.x_i = xp;
+							theLevel.y_i = yp;
 						}
 						if (line[0] == '-') {
 							parsing_level = false;

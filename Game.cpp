@@ -12,31 +12,31 @@ void Game::init(sf::RenderWindow * window) {
 	ymax = 600 - playersize;
 	factor = 1.0;
 	if (_levels.size()) {
-		current_level = &_levels[0];
-		current_level->active = true;
+		act_lev = &_levels[0];
+		act_lev->active = true;
 	} else
-		current_level = NULL;
+		act_lev = NULL;
 }
 
 bool Game::nextLevel() {
-	if (current_level == NULL)
+	if (act_lev == NULL)
 		return false;
-	if (current_level->id == _levels.size()) {
-		current_level = NULL;
+	if (act_lev->id == _levels.size()) {
+		act_lev = NULL;
 		return false;
 	} else {
-		current_level = &(_levels[current_level->id]);
+		act_lev = &(_levels[act_lev->id]);
 		return true;
 	}
 }
 
 bool Game::isPaused() {
-	return current_level->_state == PAUSED;
+	return act_lev->_state == PAUSED;
 }
 
 void Game::pause() {
-	current_level->_prevstate = current_level->_state;
-	current_level->_state = PAUSED;
+	act_lev->_pstate = act_lev->_state;
+	act_lev->_state = PAUSED;
 	sf::Text t;
 	t.setFont(font);
 	t.setCharacterSize(40);
@@ -48,7 +48,7 @@ void Game::pause() {
 }
 
 void Game::resume() {
-	current_level->_state = current_level->_prevstate;
+	act_lev->_state = act_lev->_pstate;
 }
 
 void Game::crash() {
@@ -85,13 +85,13 @@ void Game::drawDot(sf::Color c, float xp, float yp) {
 }
 
 void Game::draw() {
-	for (unsigned int i = 0; i < current_level->numPlanets; i++)
-		_window->draw(current_level->drawPlanet(i));
+	for (unsigned int i = 0; i < act_lev->nPlanets; i++)
+		_window->draw(act_lev->drawPlanet(i));
 
-	for (unsigned int i = 1; i < active_level prevstream.size(); i++) {
+	for (unsigned int i = 1; i < active_level pstream.size(); i++) {
 		if (i == 1)
-			drawDot(sf::Color::White, active_level prevstream[0].position.x, active_level prevstream[0].position.y);
-		sf::Vertex line2[2] = {active_level prevstream[i-1], active_level prevstream[i]};
+			drawDot(sf::Color::White, active_level pstream[0].position.x, active_level pstream[0].position.y);
+		sf::Vertex line2[2] = {active_level pstream[i-1], active_level pstream[i]};
 		line2[0].color = sf::Color::White;
 		line2[1].color = sf::Color::White;
 		_window->draw(line2, 2, sf::Lines);
@@ -101,13 +101,13 @@ void Game::draw() {
 		sf::Vertex line1[2] = {active_level stream[i-1], active_level stream[i]};
 		_window->draw(line1, 2, sf::Lines);
 	}
-	if (current_level->released)
-		drawDot(sf::Color::Black, current_level->releasex, current_level->releasey);
+	if (act_lev->released)
+		drawDot(sf::Color::Black, act_lev->x_r, act_lev->y_r);
 
 	if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
 		double a;
-		int x1 = current_level->initx;
-		int y1 = current_level->inity;
+		int x1 = act_lev->x_i;
+		int y1 = act_lev->y_i;
 		int x2 = _ball.p.x;
 		int y2 = _ball.p.y;
 		int xdiff = x2 - x1;
@@ -129,7 +129,7 @@ void Game::draw() {
 		_window->draw(line1, 2, sf::Lines);
 		_window->draw(line2, 2, sf::Lines);
 	}
-	_window->draw(current_level->drawPlayer());
+	_window->draw(act_lev->drawPlayer());
 }
 
 float max(float a, float b) {
@@ -146,8 +146,8 @@ void Game::drawText() {
 	t.setCharacterSize(textScale);
 	t.setColor(sf::Color::Red);
 	t.setPosition(xmin, ymin);
-	float xv = current_level->_player.v.x;
-	float yv = current_level->_player.v.y;
+	float xv = act_lev->_dot.v.x;
+	float yv = act_lev->_dot.v.y;
 	t.setString("Speed: " + std::to_string((int)sqrt(xv*xv + yv*yv)));
 	_window->draw(t);
 	if (IS DRAGGING) {
@@ -175,7 +175,7 @@ void Game::check_bounds() {
 }
 
 void Game::move() {
-	Player * p = &current_level->_player;
+	Player * p = &act_lev->_dot;
 	unsigned int ix = p->p.x;
 	unsigned int iy = p->p.y;
 	p->v.x += p->a.x;
@@ -203,23 +203,23 @@ void Game::move() {
 void Game::update() {
 	if (IS DRAGGING) {
 		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
-		current_level->setPlayerPos(mpos.x, mpos.y);
+		act_lev->setPlayerPos(mpos.x, mpos.y);
 		return;
 	}
 	else if (IS LAUNCHING) {
-		if (!current_level->released) {
-			current_level->releasex = _ball.p.x;
-			current_level->releasey = _ball.p.y;
-			current_level->released = true;
+		if (!act_lev->released) {
+			act_lev->x_r = _ball.p.x;
+			act_lev->y_r = _ball.p.y;
+			act_lev->released = true;
 			sf::Vertex v;
 			v.position.x = _ball.p.x;
 			v.position.y = _ball.p.y;
 			active_level stream.push_back(v);
 		}
-		bool left = _ball.p.x < current_level->initx;
+		bool left = _ball.p.x < act_lev->x_i;
 		int distx, disty;
-		distx = current_level->initx - _ball.p.x;
-		disty = current_level->inity - _ball.p.y;
+		distx = act_lev->x_i - _ball.p.x;
+		disty = act_lev->y_i - _ball.p.y;
 		double ax, ay;
 		ax = (double)distx * SPRING;
 		ay = (double)disty * SPRING;
@@ -227,19 +227,19 @@ void Game::update() {
 		_ball.a.y = ay;
 		move();
 		if (left) {
-			if (_ball.p.x >= current_level->initx)
+			if (_ball.p.x >= act_lev->x_i)
 				SET IN_PLAY;
 		} else {
-			if (_ball.p.x <= current_level->initx)
+			if (_ball.p.x <= act_lev->x_i)
 				SET IN_PLAY;
 		}
 	}
 	else if (IS IN_PLAY) {
-		sf::Vector2f pull = current_level->getGravitationalPull();
+		sf::Vector2f pull = act_lev->getGravitationalPull();
 		_ball.a.x = pull.x;
 		_ball.a.y = pull.y;
 		move();
-		if (crashing && current_level->isCrashed()) {
+		if (crashing && act_lev->isCrashed()) {
 			SET CRASHED;
 			return;
 		}

@@ -16,36 +16,29 @@ enum gamestate {
 
 class Level {
 public:
+
 	Level();
-	int id;
-	bool active;
-	gamestate _state;
-	gamestate _prevstate;
-	Player _player;
 
-	unsigned int numPlanets;
-	int initx, inity, releasex, releasey;
+	unsigned int id;
+	bool active, released;
+	Player _dot;
+	gamestate _state, _pstate;
+	unsigned int nPlanets;
+	int x_i, y_i, x_r, y_r;
+	std::vector<sf::Vertex> stream, pstream;
 
-	bool released;
-
-	std::vector<sf::Vertex> prevstream;
-	std::vector<sf::Vertex> stream;
+	sf::Vector2f getGravitationalPull();
+	Planet * planetAt(int i);
 
 	sf::CircleShape drawPlanet(unsigned int i);
 	sf::CircleShape drawPlayer();
-	void movePlayer(int x, int y);
-
-	void reset();
-
-	void addPlanet(Planet p);
-	void setPlayerPos(sf::Vector2i pos);
-	void setPlayerPos(int x, int y);
 
 	bool isCrashed();
+	void setPlayerPos(sf::Vector2i pos);
+	void setPlayerPos(int x, int y);
+	void addPlanet(Planet p);
 
-	Planet * planetAt(int i);
-	sf::Vector2f getGravitationalPull();
-
+	void reset();
 private:
 	std::vector<Planet> _planets;
 };
