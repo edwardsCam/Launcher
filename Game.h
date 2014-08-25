@@ -6,6 +6,9 @@
 #include "Level.h"
 #include "Parser.h"
 
+#define WIDTH 700.0
+#define HEIGHT 700.0
+
 #define IS act_lev->_state == 
 #define ISNT act_lev->_state !=
 #define SET act_lev->_state =
@@ -17,7 +20,7 @@
 #define textsize 15
 #define bounds_checking false
 #define zoom_view true
-#define crashing true
+#define crashing false
 
 class Game {
 public:
@@ -26,7 +29,6 @@ public:
 	sf::RenderWindow * _window;
 	sf::Font font;
 
-	int xmin, ymin, xmax, ymax;
 	float factor;
 
 	Level * act_lev;
@@ -35,7 +37,6 @@ public:
 	bool isPaused();
 	void pause(), resume();
 	void crash();
-	void resetBounds();
 	void move();
 	void check_bounds();
 	void update();

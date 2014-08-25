@@ -6,10 +6,6 @@ void Game::init(sf::RenderWindow * window) {
 	_window = window;
 	_levels = Parser::parseLevels();
 	font.loadFromFile("arial.ttf");
-	xmin = playersize;
-	ymin = playersize;
-	xmax = 800 - playersize;
-	ymax = 600 - playersize;
 	factor = 1.0;
 	if (_levels.size()) {
 		act_lev = &_levels[0];
@@ -60,13 +56,6 @@ void Game::crash() {
 	t.setPosition(300, 200);
 	t.setString("CRASHED");
 	_window->draw(t);
-}
-
-void Game::resetBounds() {
-	xmin = playersize;
-	ymin = playersize;
-	xmax = 800.0 - playersize;
-	ymax = 600.0 - playersize;
 }
 
 void Game::drawDot(sf::Color c, float xp, float yp) {
@@ -139,13 +128,20 @@ float max(float a, float b) {
 		return b;
 }
 
+float min(float a, float b) {
+	if (a <= b)
+		return a;
+	else
+		return b;
+}
+
 void Game::drawText() {
 	sf::Text t;
 	t.setFont(font);
-	int textScale = textsize * (double)(xmax - xmin) / (800.0 - playersize);
+	int textScale = (double)textsize * (abs((WIDTH - 2*playersize)-_ball.p.x)) / (WIDTH - 2*playersize);
 	t.setCharacterSize(textScale);
 	t.setColor(sf::Color::Red);
-	t.setPosition(xmin, ymin);
+	t.setPosition(0, 0);
 	float xv = act_lev->_dot.v.x;
 	float yv = act_lev->_dot.v.y;
 	t.setString("Speed: " + std::to_string((int)sqrt(xv*xv + yv*yv)));
@@ -153,7 +149,7 @@ void Game::drawText() {
 	if (IS DRAGGING) {
 		sf::Text t;
 		t.setFont(font);
-		int textScale = (textsize-3) * (double)(xmax - xmin) / (800.0 - playersize);
+		int textScale = (double)(textsize-3) * (abs((WIDTH - 2*playersize)-_ball.p.x)) / (WIDTH - 2*playersize);
 		t.setCharacterSize(textScale);
 		t.setColor(sf::Color::Black);
 		sf::Vector2i mpos = sf::Mouse::getPosition(*_window);
@@ -168,10 +164,10 @@ void Game::check_bounds() {
 		_ball.p.x = playersize;
 	if (_ball.p.y < playersize)
 		_ball.p.y = playersize;
-	if (_ball.p.x > 800 - playersize)
-		_ball.p.x = 800 - playersize;
-	if (_ball.p.y > 600 - playersize)
-		_ball.p.y = 600 - playersize;
+	if (_ball.p.x > WIDTH - playersize)
+		_ball.p.x = WIDTH - playersize;
+	if (_ball.p.y > HEIGHT - playersize)
+		_ball.p.y = HEIGHT - playersize;
 }
 
 void Game::move() {
@@ -192,11 +188,33 @@ void Game::move() {
 		p->p.y += s;
 		p->y_speed_buff -= s;
 	}
+	if (bounds_checking)
+		check_bounds();
 	if (ix != p->p.x || iy != p->p.y) {
 		sf::Vertex v;
 		v.position = sf::Vector2f(p->p.x, p->p.y);
 		v.color = sf::Color::Black;
 		active_level stream.push_back(v);
+	}
+	if (!bounds_checking && zoom_view) {
+		factor = 1.0;
+		if (_ball.p.x < playersize) {
+			int diff = WIDTH - playersize - _ball.p.x;
+			factor = (double)diff/(WIDTH - (2*playersize));
+		}
+		else if (_ball.p.x > WIDTH - playersize) {
+			int diff = _ball.p.x - playersize;
+			factor = (double)diff/(WIDTH - (2*playersize));
+		}
+
+		if (_ball.p.y < playersize) {
+			int diff = HEIGHT - playersize - _ball.p.y;
+			factor = max(factor, (double)diff/(HEIGHT - (2*playersize)));
+		}
+		else if (_ball.p.y > HEIGHT - playersize) {
+			int diff = _ball.p.y - playersize;
+			factor = max(factor, (double)diff/(HEIGHT - (2*playersize)));
+		}
 	}
 }
 
@@ -242,48 +260,6 @@ void Game::update() {
 		if (crashing && act_lev->isCrashed()) {
 			SET CRASHED;
 			return;
-		}
-		if (bounds_checking)
-			check_bounds();
-		if (zoom_view) {
-			factor = 1.0;
-			if (_ball.p.x > xmax) {
-				double init = (xmax - xmin);
-				xmax = _ball.p.x;
-				factor = max(factor, (double)(xmax - xmin) / init);
-
-				double ydiff = ymax - ymin;
-				ymin -= (ydiff * factor - ydiff) / 2;
-				ymax += (ydiff * factor - ydiff) / 2;
-			}
-			else if (_ball.p.x < xmin) {
-				double init = (xmax - xmin);
-				xmin = _ball.p.x;
-				factor = max(factor, (double)(xmax - xmin) / init);
-
-				double ydiff = ymax - ymin;
-				ymin -= (ydiff * factor - ydiff) / 2;
-				ymax += (ydiff * factor - ydiff) / 2;
-			}
-
-			if (_ball.p.y > ymax) {
-				double init = (ymax - ymin);
-				ymax = _ball.p.y;
-				factor = max(factor, (double)(ymax - ymin) / init);
-
-				double xdiff = xmax - xmin;
-				xmin -= (xdiff * factor - xdiff) / 2;
-				xmax += (xdiff * factor - xdiff) / 2;
-			}
-			else if (_ball.p.y < ymin) {
-				double init = (ymax - ymin);
-				ymin = _ball.p.y;
-				factor = max(factor, (double)(ymax - ymin) / init);
-
-				double xdiff = xmax - xmin;
-				xmin -= (xdiff * factor - xdiff) / 2;
-				xmax += (xdiff * factor - xdiff) / 2;
-			}
 		}
 	} else if (IS CRASHED) {
 		crash();

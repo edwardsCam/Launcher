@@ -18,8 +18,6 @@
 
 // Definitions
 #define MAX_FRAMERATE 32
-#define WIDTH 800.0
-#define HEIGHT 600.0
 #define BG_COLOR 175,220,220
 #define _ball curr->_dot
 #define IS curr->_state == 
@@ -85,9 +83,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						}
 						else if (event.key.code == sf::Keyboard::Escape) {
 							curr->reset();
-							theGame.resetBounds();
-							view.setSize(800, 600);
-							view.setCenter(400, 300);
+							view.setSize(WIDTH, HEIGHT);
+							view.setCenter(WIDTH/2, HEIGHT/2);
 							window.setView(view);
 						}
 						break;
@@ -122,10 +119,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				theGame.update();
 				theGame.draw();
 			}
-			if (zoom_view && theGame.factor > 1) {
+			if (zoom_view && theGame.factor != 1.0) {
+				view.setSize(WIDTH, HEIGHT);
 				view.zoom(theGame.factor);
-				view.setCenter((theGame.xmax + theGame.xmin)/2, (theGame.ymax + theGame.ymin)/2);
+				sf::Vector2i pos = theGame.act_lev->_dot.p;
+
+				float vx = WIDTH/2;
+				float vy = HEIGHT/2;
+
+				float xc = pos.x < playersize ? vx - (playersize - pos.x)/2:
+						(pos.x > WIDTH - playersize ?
+							vx + (pos.x + playersize - WIDTH)/2 : WIDTH/2);
+				float yc = pos.y < playersize ? vy - (playersize - pos.y)/2:
+						(pos.y > HEIGHT - playersize ?
+							vy + (pos.y + playersize - HEIGHT)/2 : HEIGHT/2);
+
+				view.setCenter(xc, yc);
 				window.setView(view);
+				theGame.factor = 1.0;
 			}
 			theGame.drawText();
 			window.display();
