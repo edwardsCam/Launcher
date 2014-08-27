@@ -10,10 +10,6 @@ class Goal {
 
 public:
 	Goal() {}
-	Goal(int x, int y) {
-		pos.x = x;
-		pos.y = y;
-	}
 	sf::Vector2i pos;
 
 	bool isTouching(Player * p) {

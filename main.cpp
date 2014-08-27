@@ -1,28 +1,17 @@
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 
 #include <windows.h>
-#include <stdlib.h>
 #include <string.h>
-#include <tchar.h>
-#include <iostream>
 #include "SFML\Window.hpp"
 #include "SFML\Graphics.hpp"
 
 #include "Game.h"
-#include "Planet.h"
-
-#define _debug false
-#define pause_on_lose_focus false
-
-// Globals
 
 // Definitions
 #define MAX_FRAMERATE 32
 #define BG_COLOR 175,220,220
-#define _ball curr->_dot
-#define IS curr->_state == 
-#define ISNT curr->_state !=
-#define SET curr->_state =
+#define _debug false
+#define pause_on_lose_focus false
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -40,16 +29,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//game loop
 	while (window.isOpen())
 	{
-		Level * curr = theGame.act_lev;
-		while (curr && curr->active)
+		Level * lev = theGame.lev;
+		while (lev && lev->active)
 		{
-			sf::Event event;
-			if (window.pollEvent(event)) {
-				switch (event.type) {
+			sf::Event _event;
+			if (window.pollEvent(_event)) {
+				switch (_event.type) {
 				case (sf::Event::Closed):
 					{
 						//todo save state? or other things before closing
-						curr->active = false;
+						lev->active = false;
 						window.close();
 						break;
 					}
@@ -66,38 +55,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::Resized):
 					{
-						sf::Vector2u s(WIDTH, HEIGHT);
-						window.setSize(s);
+						window.setSize(sf::Vector2u(WIDTH, HEIGHT));
 						break;
 					}
 				case (sf::Event::KeyPressed):
 					{
-						if (event.key.code == sf::Keyboard::Return) {
+						if (_event.key.code == sf::Keyboard::Return) {
 							SET LAUNCHING;
 						}
-						else if (event.key.code == sf::Keyboard::Space) {
-							if (theGame.isPaused())
+						else if (_event.key.code == sf::Keyboard::Space) {
+							if (IS PAUSED)
 								theGame.resume();
-							else if (ISNT CRASHED)
+							else if (ISNT CRASHED && ISNT WON)
 								theGame.pause();
 						}
-						else if (event.key.code == sf::Keyboard::Escape) {
-							curr->reset();
+						else if (_event.key.code == sf::Keyboard::Escape) {
+							lev->reset();
+							theGame.factor = 1.0;
 							view.setSize(WIDTH, HEIGHT);
 							view.setCenter(WIDTH/2, HEIGHT/2);
-							theGame.factor = 1.0;
 							window.setView(view);
 						}
 						break;
 					}
 				case (sf::Event::MouseButtonPressed):
 					{
-						if (ISNT PAUSED && ISNT IN_PLAY) {
+						if (IS INITIAL_READY || IS DRAGGING || IS LAUNCHING) {
 							sf::Vector2i playerpos = _ball.p;
 							while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 								sf::Vector2i mousepos = sf::Mouse::getPosition(window);
 								if (abs(mousepos.x - playerpos.x) <= playersize && abs(mousepos.y - playerpos.y) <= playersize) {
-									curr->_state = DRAGGING;
+									lev->_state = DRAGGING;
 									break;
 								}
 							}
@@ -106,13 +94,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				case (sf::Event::MouseButtonReleased):
 					{
-						if (ISNT PAUSED) {
-							if (IS DRAGGING)
-								curr->_state = LAUNCHING;
-						}
+						if (ISNT PAUSED && IS DRAGGING)
+							lev->_state = LAUNCHING;
 						break;
 					}
-					//todo: other events
 				} // switch
 			} // event poll
 			if (ISNT PAUSED) {
@@ -120,22 +105,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				theGame.update();
 				theGame.draw();
 			}
-			if (zoom_view && theGame.factor != 1.0) {
+			if (zoom_view) {
 				view.setSize(WIDTH, HEIGHT);
 				view.zoom(theGame.factor);
-				sf::Vector2i pos = theGame.act_lev->_dot.p;
+				sf::Vector2i pos = theGame.lev->_dot.p;
 
-				float vx = WIDTH/2;
-				float vy = HEIGHT/2;
+				float xmid = WIDTH/2;
+				float ymid = HEIGHT/2;
+				float xcen = xmid;
+				float ycen = ymid;
 
-				float xc = pos.x < playersize ? vx - (playersize - pos.x)/2:
-						(pos.x > WIDTH - playersize ?
-							vx + (pos.x + playersize - WIDTH)/2 : WIDTH/2);
-				float yc = pos.y < playersize ? vy - (playersize - pos.y)/2:
-						(pos.y > HEIGHT - playersize ?
-							vy + (pos.y + playersize - HEIGHT)/2 : HEIGHT/2);
+				if (pos.x < playersize)
+					xcen = xmid - (playersize - pos.x)/2;
+				else if (pos.x > WIDTH - playersize)
+					xcen = xmid + (pos.x + playersize - WIDTH)/2;
 
-				view.setCenter(xc, yc);
+				if (pos.y < playersize)
+					ycen = ymid - (playersize - pos.y)/2;
+				else if (pos.y > HEIGHT - playersize)
+					ycen = ymid + (pos.y + playersize - HEIGHT)/2;
+
+				view.setCenter(xcen, ycen);
 				window.setView(view);
 			}
 			if (IS DRAGGING)
@@ -146,18 +136,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			window.close();
 	} // game loop
 
-	return 0;
-}
-
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE:  Processes messages for the main window.
-//
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	return 0;
 }

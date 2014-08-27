@@ -1,7 +1,7 @@
 #include "Planet.h"
 
-#define distance_damp 0.04
-#define min 0.04
+#define distance_damp 0.03
+#define min 0.05
 #define max 20
 
 sf::Vector2f Planet::getPull(const sf::Vector2i loc) {
@@ -19,6 +19,5 @@ sf::Vector2f Planet::getPull(const sf::Vector2i loc) {
 	else if (pull > max)
 		pull = max;
 
-	sf::Vector2f ret(pull * (distx/(abs(distx)+abs(disty))), pull * (disty/(abs(distx)+abs(disty))));
-	return ret;
+	return sf::Vector2f(pull * (distx/(abs(distx)+abs(disty))), pull * (disty/(abs(distx)+abs(disty))));
 }

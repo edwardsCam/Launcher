@@ -31,13 +31,11 @@ public:
 	std::vector<sf::Vertex> stream, pstream;
 
 	sf::Vector2f getGravitationalPull();
-	Planet * planetAt(int i);
 
-	sf::CircleShape drawPlanet(unsigned int i);
-	sf::CircleShape drawPlayer();
+	sf::CircleShape planetHandle(unsigned int i);
+	sf::CircleShape playerHandle();
 
 	bool isCrashed();
-	void setPlayerPos(sf::Vector2i pos);
 	void setPlayerPos(int x, int y);
 	void addPlanet(Planet p);
 
